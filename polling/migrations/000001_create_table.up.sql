@@ -47,3 +47,17 @@ CREATE TABLE IF NOT EXISTS questions (
     content TEXT NOT NULL,
     poll_id UUID REFERENCES polls(id) ON DELETE CASCADE
 );
+
+-- ############# Storing Results
+CREATE TABLE IF NOT EXISTS results (
+    id UUID PRIMARY KEY,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    poll_id UUID REFERENCES polls(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS poll_answers (
+    id UUID PRIMARY KEY,
+    result_id UUID REFERENCES results(id) ON DELETE CASCADE,
+    question_num INT,
+    answer INT
+);

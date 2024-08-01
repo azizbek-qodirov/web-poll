@@ -378,14 +378,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/polls": {
-            "get": {
+        "/poll_answers": {
+            "post": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Get all polls with pagination",
+                "description": "Save the answer for a specific question in a poll",
                 "consumes": [
                     "application/json"
                 ],
@@ -393,28 +393,82 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "polls"
+                    "results"
                 ],
-                "summary": "Get all polls",
+                "summary": "Save a poll answer",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
+                        "description": "Save Poll Answer Request",
+                        "name": "SavePollAnswerReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.SavePollAnswerReq"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/genprotos.PollGetAllRes"
+                            "$ref": "#/definitions/genprotos.Void"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/polls": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve all polls associated with a user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "results"
+                ],
+                "summary": "Get all polls for a user",
+                "parameters": [
+                    {
+                        "description": "Get Poll Request",
+                        "name": "GetPollReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.GetPollReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.GetPollRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
                         }
                     },
                     "500": {
@@ -820,9 +874,101 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/results": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create a new result for a poll",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "results"
+                ],
+                "summary": "Create a new result",
+                "parameters": [
+                    {
+                        "description": "Create Result Request",
+                        "name": "CreateResultReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.CreateResultReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.Void"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request payload",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "genprotos.CreateResultReq": {
+            "type": "object",
+            "properties": {
+                "poll_id": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.GetPoll": {
+            "type": "object",
+            "properties": {
+                "poll_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.GetPollReq": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.GetPollRes": {
+            "type": "object",
+            "properties": {
+                "Poll": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.GetPoll"
+                    }
+                },
+                "user_id": {
+                    "type": "string"
+                }
+            }
+        },
         "genprotos.Pagination": {
             "type": "object",
             "properties": {
@@ -1008,6 +1154,20 @@ const docTemplate = `{
                 },
                 "working_experience": {
                     "type": "integer"
+                }
+            }
+        },
+        "genprotos.SavePollAnswerReq": {
+            "type": "object",
+            "properties": {
+                "answer": {
+                    "type": "integer"
+                },
+                "question_num": {
+                    "type": "integer"
+                },
+                "result_id": {
+                    "type": "string"
                 }
             }
         },

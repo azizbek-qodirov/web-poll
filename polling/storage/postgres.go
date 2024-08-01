@@ -15,6 +15,7 @@ type Storage struct {
 	UserS     *managers.UserManager
 	QuestionS *managers.QuestionManager
 	PollS     *managers.PollManager
+	ResultS   *managers.ResultManager
 }
 
 func NewPostgresStorage(config config.Config) (*Storage, error) {
@@ -61,4 +62,11 @@ func (s *Storage) Question() QuestionI {
 		s.QuestionS = managers.NewQuestionManager(s.PgClient)
 	}
 	return s.QuestionS
+}
+
+func (s *Storage) Result() ResultI {
+	if s.ResultS == nil {
+		s.ResultS = managers.NewResultManager(s.PgClient)
+	}
+	return s.ResultS
 }

@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package polling;
+
+option go_package = "genprotos/";
+
+import "protos/void.proto";
+
+service ResultService {
+    rpc CreateResult(CreateResultReq) returns (Void);
+    rpc SavePollAnswer(SavePollAnswerReq) returns (Void);
+    rpc GetPoll(GetPollReq) returns (GetPollRes);
+}
+
+message CreateResultReq {
+    string user_id = 1;
+    string poll_id = 2;
+}
+
+message SavePollAnswerReq {
+    string result_id = 1;
+    int32 question_num = 2;
+    int32 answer = 3;
+}
+
+message GetPollReq {
+    string user_id = 1;
+}
+
+message GetPoll {
+    string poll_id = 1;
+}
+
+message GetPollRes {
+    string user_id = 1;
+    repeated GetPoll Poll = 2;
+}
