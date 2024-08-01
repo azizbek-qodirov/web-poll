@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package polling;
+
+option go_package = "genprotos/";
+
+import "protos/void.proto";
+// import "void.proto";
+
+
+service PollService {
+    rpc Create(PollCreateReq) returns (Void);
+    rpc Update(PollUpdateReq) returns (Void);
+    rpc Delete(ByID) returns (Void);
+    rpc GetByID(ByID) returns (PollGetByIDRes);
+    rpc GetAll(PollGetAllReq) returns (PollGetAllRes);
+}
+
+message PollCreateReq {
+    int32 poll_num = 1;
+    string title = 2;
+    string options = 3; // JSONB is stored as a string
+}
+
+message PollUpdateReq {
+    string id = 1;
+    int32 poll_num = 2;
+    string title = 3;
+}
+
+message PollGetByIDRes {
+    string id = 1;
+    int32 poll_num = 2;
+    string title = 3;
+    string options = 4; // JSONB is stored as a string
+}
+
+message PollGetAllReq {
+    Pagination Pagination = 1;
+}
+
+
+message PollGetAllRes {
+    repeated PollGetByIDRes poll = 1;
+    Pagination pagination = 2;
+}
