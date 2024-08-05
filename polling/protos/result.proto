@@ -9,7 +9,6 @@ import "protos/void.proto";
 service ResultService {
     rpc CreateResult(CreateResultReq) returns (Void);
     rpc SavePollAnswer(SavePollAnswerReq) returns (Void);
-    rpc GetPoll(GetPollReq) returns (GetPollRes);
 }
 
 message CreateResultReq {
@@ -23,15 +22,7 @@ message SavePollAnswerReq {
     int32 answer = 3;
 }
 
-message GetPollReq {
-    string user_id = 1;
-}
 
 message GetPoll {
     string poll_id = 1;
-}
-
-message GetPollRes {
-    string user_id = 1;
-    repeated GetPoll Poll = 2;
 }

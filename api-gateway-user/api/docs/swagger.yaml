@@ -1,0 +1,807 @@
+definitions:
+  genprotos.CreateResultReq:
+    properties:
+      poll_id:
+        type: string
+      user_id:
+        type: string
+    type: object
+  genprotos.GetPoll:
+    properties:
+      poll_id:
+        type: string
+    type: object
+  genprotos.GetPollReq:
+    properties:
+      user_id:
+        type: string
+    type: object
+  genprotos.GetPollRes:
+    properties:
+      Poll:
+        items:
+          $ref: '#/definitions/genprotos.GetPoll'
+        type: array
+      user_id:
+        type: string
+    type: object
+  genprotos.Pagination:
+    properties:
+      limit:
+        type: integer
+      offset:
+        type: integer
+    type: object
+  genprotos.PollCreateReq:
+    properties:
+      options:
+        additionalProperties:
+          type: string
+        description: JSONB is stored as a string
+        type: object
+      poll_num:
+        type: integer
+      title:
+        type: string
+    type: object
+  genprotos.PollGetAllRes:
+    properties:
+      pagination:
+        $ref: '#/definitions/genprotos.Pagination'
+      poll:
+        items:
+          $ref: '#/definitions/genprotos.PollGetByIDRes'
+        type: array
+    type: object
+  genprotos.PollGetByIDRes:
+    properties:
+      id:
+        type: string
+      options:
+        description: JSONB is stored as a string
+        type: string
+      poll_num:
+        type: integer
+      title:
+        type: string
+    type: object
+  genprotos.PollUpdateReq:
+    properties:
+      id:
+        type: string
+      poll_num:
+        type: integer
+      title:
+        type: string
+    type: object
+  genprotos.Question:
+    properties:
+      content:
+        type: string
+      id:
+        description: ID of the question
+        type: string
+      num:
+        type: integer
+      poll_id:
+        description: Reference to Poll ID
+        type: string
+    type: object
+  genprotos.QuestionCreateReq:
+    properties:
+      content:
+        type: string
+      num:
+        type: integer
+      poll_id:
+        description: Reference to Poll ID
+        type: string
+    type: object
+  genprotos.QuestionGetAllRes:
+    properties:
+      question:
+        description: List of questions
+        items:
+          $ref: '#/definitions/genprotos.Question'
+        type: array
+    type: object
+  genprotos.QuestionGetByIDRes:
+    properties:
+      content:
+        type: string
+      id:
+        description: ID of the question
+        type: string
+      num:
+        type: integer
+      poll_id:
+        description: Reference to Poll ID
+        type: string
+    type: object
+  genprotos.QuestionUpdateReq:
+    properties:
+      content:
+        type: string
+      id:
+        description: ID of the question to be updated
+        type: string
+      num:
+        type: integer
+      poll_id:
+        description: Reference to Poll ID
+        type: string
+    type: object
+  genprotos.RegisterReqForSwagger:
+    properties:
+      email:
+        type: string
+      gender:
+        type: string
+      level:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      surname:
+        type: string
+      working_experience:
+        type: integer
+    type: object
+  genprotos.SavePollAnswerReq:
+    properties:
+      answer:
+        type: integer
+      question_num:
+        type: integer
+      result_id:
+        type: string
+    type: object
+  genprotos.Void:
+    type: object
+  models.ConfirmRegistrationReq:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+    type: object
+  models.ForgotPasswordReq:
+    properties:
+      email:
+        description: User's email address
+        type: string
+    type: object
+  models.GetProfileResp:
+    properties:
+      email:
+        description: User's email address
+        type: string
+      id:
+        description: User's unique identifier
+        type: string
+      is_confirmed:
+        description: Add IsConfirmed to the model
+        type: boolean
+      password:
+        description: User's password
+        type: string
+      role:
+        type: string
+    type: object
+  models.LoginReq:
+    properties:
+      email:
+        description: User's email
+        type: string
+      password:
+        description: User's password
+        type: string
+    type: object
+  models.RecoverPasswordReq:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+      new_password:
+        type: string
+    type: object
+  token.Tokens:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /confirm-registration:
+    post:
+      consumes:
+      - application/json
+      description: Confirms a user's registration using the code sent to their email.
+      parameters:
+      - description: Confirmation request
+        in: body
+        name: confirmation
+        required: true
+        schema:
+          $ref: '#/definitions/models.ConfirmRegistrationReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT tokens
+          schema:
+            $ref: '#/definitions/token.Tokens'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "401":
+          description: Incorrect verification code
+          schema:
+            type: string
+        "404":
+          description: Verification code expired or email not found
+          schema:
+            type: string
+      summary: Confirm registration with code
+      tags:
+      - registration
+  /forgot-password:
+    post:
+      consumes:
+      - application/json
+      description: Sends a confirmation code to email recovery password
+      parameters:
+      - description: User login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.ForgotPasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Page not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Forgot passwrod
+      tags:
+      - password-recovery
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user with email and password
+      parameters:
+      - description: User login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT tokens
+          schema:
+            $ref: '#/definitions/token.Tokens'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "401":
+          description: Invalid email or password
+          schema:
+            type: string
+      summary: Login a user
+      tags:
+      - login
+  /poll:
+    post:
+      consumes:
+      - application/json
+      description: Create a new poll with poll number, title, and options
+      parameters:
+      - description: Poll creation request
+        in: body
+        name: poll
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.PollCreateReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/genprotos.Void'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a new poll
+      tags:
+      - polls
+    put:
+      consumes:
+      - application/json
+      description: Update an existing poll with poll number, title, and options
+      parameters:
+      - description: Poll update request
+        in: body
+        name: poll
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.PollUpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.Void'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Poll not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update an existing poll
+      tags:
+      - polls
+  /poll/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a poll by its ID
+      parameters:
+      - description: Poll ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.Void'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Poll not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete an existing poll
+      tags:
+      - polls
+    get:
+      consumes:
+      - application/json
+      description: Get a poll by its ID
+      parameters:
+      - description: Poll ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.PollGetByIDRes'
+        "404":
+          description: Poll not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get a poll by ID
+      tags:
+      - polls
+  /poll_answers:
+    post:
+      consumes:
+      - application/json
+      description: Save the answer for a specific question in a poll
+      parameters:
+      - description: Save Poll Answer Request
+        in: body
+        name: SavePollAnswerReq
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.SavePollAnswerReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.Void'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Save a poll answer
+      tags:
+      - results
+  /polls:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve all polls associated with a user
+      parameters:
+      - description: Get Poll Request
+        in: body
+        name: GetPollReq
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.GetPollReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.GetPollRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all polls for a user
+      tags:
+      - results
+  /profile:
+    get:
+      consumes:
+      - application/json
+      description: Get the profile of the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetProfileResp'
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get user profile
+      tags:
+      - user
+  /question:
+    post:
+      consumes:
+      - application/json
+      description: Create a new question with the given details
+      parameters:
+      - description: Question creation request
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.QuestionCreateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Question created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a new question
+      tags:
+      - question
+    put:
+      consumes:
+      - application/json
+      description: Update an existing question with the given details
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Question update request
+        in: body
+        name: question
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.QuestionUpdateReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Question updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update an existing question
+      tags:
+      - question
+  /question/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a question by its ID
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Question deleted successfully
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete a question
+      tags:
+      - question
+    get:
+      consumes:
+      - application/json
+      description: Get a question by its ID
+      parameters:
+      - description: Question ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.QuestionGetByIDRes'
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get a question by ID
+      tags:
+      - question
+  /questions:
+    get:
+      consumes:
+      - application/json
+      description: Get all questions with pagination
+      parameters:
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/genprotos.QuestionGetAllRes'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Get all questions
+      tags:
+      - question
+  /recover-password:
+    post:
+      consumes:
+      - application/json
+      description: Verifies the code and updates the password
+      parameters:
+      - description: Recover Password Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.RecoverPasswordReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Password successfully updated
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "401":
+          description: Incorrect verification code
+          schema:
+            type: string
+        "404":
+          description: Verification code expired or email not found
+          schema:
+            type: string
+        "500":
+          description: Error updating password
+          schema:
+            type: string
+      summary: Recover password (Use this one after sending verification code)
+      tags:
+      - password-recovery
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with email, username, and password
+      parameters:
+      - description: User registration request
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.RegisterReqForSwagger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: JWT tokens
+          schema:
+            $ref: '#/definitions/token.Tokens'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      summary: Register a new user
+      tags:
+      - registration
+  /results:
+    post:
+      consumes:
+      - application/json
+      description: Create a new result for a poll
+      parameters:
+      - description: Create Result Request
+        in: body
+        name: CreateResultReq
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.CreateResultReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/genprotos.Void'
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a new result
+      tags:
+      - results
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

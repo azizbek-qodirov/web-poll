@@ -3,7 +3,6 @@ package managers
 import (
 	"context"
 	"database/sql"
-	"fmt"
 
 	pb "poll-service/genprotos"
 
@@ -33,44 +32,5 @@ func (m *ResultManager) SavePollAnswer(ctx context.Context, req *pb.SavePollAnsw
 	if err != nil {
 		return nil, err
 	}
-
 	return nil, nil
-}
-
-func (m *ResultManager) GetPoll(ctx context.Context, req *pb.GetPollReq) (*pb.GetPollRes, error) {
-	var userID string
-	query := `SELECT user_id FROM results WHERE user_id = $1`
-	row := m.Conn.QueryRowContext(ctx, query, req.UserId)
-	err := row.Scan(&userID)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			return nil, fmt.Errorf("no poll found for user_id: %s", req.UserId)
-		}
-		return nil, err
-	}
-
-	pollQuery := `SELECT poll_id FROM results WHERE user_id = $1`
-	pollRows, err := m.Conn.QueryContext(ctx, pollQuery, req.UserId)
-	if err != nil {
-		return nil, err
-	}
-	defer pollRows.Close()
-
-	var polls []*pb.GetPoll
-	for pollRows.Next() {
-		var pollID string
-		err = pollRows.Scan(&pollID)
-		if err != nil {
-			return nil, err
-		}
-
-		polls = append(polls, &pb.GetPoll{
-			PollId: pollID,
-		})
-	}
-
-	return &pb.GetPollRes{
-		UserId: req.UserId,
-		Poll:   polls,
-	}, nil
 }

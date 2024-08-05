@@ -22,7 +22,3 @@ func (s *ResultService) CreateResult(ctx context.Context, req *pb.CreateResultRe
 func (s *ResultService) SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error) {
 	return s.storage.Result().SavePollAnswer(ctx, req)
 }
-
-func (s *ResultService) GetPoll(ctx context.Context, req *pb.GetPollReq) (*pb.GetPollRes, error) {
-	return s.storage.Result().GetPoll(ctx, req)
-}

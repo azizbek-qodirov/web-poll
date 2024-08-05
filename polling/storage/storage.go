@@ -40,5 +40,4 @@ type QuestionI interface {
 type ResultI interface {
 	CreateResult(ctx context.Context, req *pb.CreateResultReq) (*pb.Void, error)
 	SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error)
-	GetPoll(ctx context.Context, req *pb.GetPollReq) (*pb.GetPollRes, error)
 }
