@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR NOT NULL,
     phone_number VARCHAR(15) NOT NULL,
     working_experience INT CHECK (working_experience >= 0),
-    level_type VARCHAR NOT NULL,
+    level VARCHAR NOT NULL,
     is_confirmed BOOLEAN DEFAULT FALSE,
     role VARCHAR(20) DEFAULT 'user',
     confirmed_at TIMESTAMP

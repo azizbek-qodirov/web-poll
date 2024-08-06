@@ -24,25 +24,25 @@ jobs:
         script: |
           cd web-poll
           git pull origin main
-          echo #################### PULLED CODE ####################
+          echo ---------------- PULLED CODE ----------------
 
           cd polling
-          echo #################### DIR CHANGED TO POLLING ####################
+          echo ---------------- DIR CHANGED TO POLLING ----------------
           sudo docker compose down
-          echo #################### DOWN POLLING ####################
+          echo ---------------- DOWN POLLING ----------------
           sudo docker compose up -d
-          echo #################### UP POLLING ####################
+          echo ---------------- UP POLLING ----------------
 
           cd ../api-gateway
-          echo #################### DIR CHANGED TO API-GATEWAY ####################
+          echo ---------------- DIR CHANGED TO API-GATEWAY ----------------
           sudo docker compose down
-          echo #################### DOWN API-GATEWAY ####################
+          echo ---------------- DOWN API-GATEWAY ----------------
           sudo docker compose up -d
-          echo #################### UP API-GATEWAY ####################
+          echo ---------------- UP API-GATEWAY ----------------
 
           cd ../api-gateway-user
-          echo #################### DIR CHANGED TO API-GATEWAY-USER ####################
+          echo ---------------- DIR CHANGED TO API-GATEWAY-USER ----------------
           sudo docker compose down
-          echo #################### DOWN API-GATEWAY-USER ####################
+          echo ---------------- DOWN API-GATEWAY-USER ----------------
           sudo docker compose up -d
-          echo #################### UP API-GATEWAY-USER ####################
+          echo ---------------- UP API-GATEWAY-USER ----------------
