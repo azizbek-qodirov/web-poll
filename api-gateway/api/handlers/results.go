@@ -87,7 +87,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 				result.User.Email,
 				result.User.PhoneNumber,
 				result.User.WorkingExperience,
-				result.User.Level,
+				result.User.LevelType,
 				fmt.Sprintf("%d - so'rovnoma", result.PollNum),
 			}
 

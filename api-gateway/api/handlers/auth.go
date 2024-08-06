@@ -73,7 +73,7 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 			Gender:            pb.GenderType(gender),
 			PhoneNumber:       req.PhoneNumber,
 			WorkingExperience: req.WorkingExperience,
-			Level:             req.Level,
+			LevelType:             req.LevelType,
 		})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "err": err.Error()})

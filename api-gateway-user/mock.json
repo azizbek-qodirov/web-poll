@@ -2,7 +2,7 @@
     {
         "email": "xma84228@zccck.com",
         "gender": "male",
-        "level": "junior",
+        "level_type": "junior",
         "name": "Wor",
         "password": "#Password7777",
         "phone_number": "+998888888888",

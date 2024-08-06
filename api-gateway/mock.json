@@ -2,7 +2,7 @@
     {
         "email": "qodirovazizbek249@gmail.com",
         "gender": "male",
-        "level": "junior",
+        "level_type": "junior",
         "name": "Azizbek",
         "password": "#Password7777",
         "phone_number": "+998888888888",
