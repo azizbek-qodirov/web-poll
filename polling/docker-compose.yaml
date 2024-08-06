@@ -11,14 +11,6 @@ services:
     depends_on:
       - postgres-db
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6380:6379"
-    networks:
-      - mynetwork
-
   postgres-db:
     container_name: polling-cont
     image: postgres:latest

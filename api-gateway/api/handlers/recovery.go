@@ -19,7 +19,7 @@ import (
 )
 
 var rdb = redis.NewClient(&redis.Options{
-	Addr: "poll_service:6379",
+	Addr: "redis:6379",
 	DB:   0,
 })
 
