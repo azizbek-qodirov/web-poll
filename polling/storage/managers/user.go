@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	pb "poll-service/genprotos"
 	"time"
 
@@ -71,8 +70,6 @@ func (m *UserManager) UpdatePassword(context context.Context, req *pb.UpdatePass
 
 func (m *UserManager) IsEmailExists(context context.Context, email *pb.IsEmailExistsReq) (*pb.IsEmailExistsResp, error) {
 	query := "SELECT COUNT(*) FROM users WHERE email = $1"
-	fmt.Println(1)
-	fmt.Println(email.Email)
 	var count int
 	err := m.Conn.QueryRow(query, email.Email).Scan(&count)
 	if err != nil {
@@ -81,8 +78,6 @@ func (m *UserManager) IsEmailExists(context context.Context, email *pb.IsEmailEx
 	if count > 0 {
 		return &pb.IsEmailExistsResp{Exists: true}, nil
 	}
-	fmt.Println(2)
-	fmt.Println("count: ", count)
 	return &pb.IsEmailExistsResp{Exists: false}, nil
 }
 

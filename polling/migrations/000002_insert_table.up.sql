@@ -3,7 +3,7 @@ INSERT INTO polls (id, poll_num, title, options) VALUES (
     'e3a2920e-8f23-4603-8086-3dfd8cffaffb', 
     1, 
     'Yo‘riqnoma: Mulohazalar sizga mos kelishiga qarab, raqamlardan birini aylana bilan belgilab qo‘ying.', 
-    '{"options": {"1": "Hech qachon", "2": "Odatda", "3": "Har doim"}}'::JSONB
+    '{"1": "Hech qachon", "2": "Odatda", "3": "Har doim"}'::JSONB
 );
 
 

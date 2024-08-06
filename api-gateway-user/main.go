@@ -19,8 +19,8 @@ func main() {
 	defer PollConn.Close()
 
 	roter := api.NewRouter(PollConn)
-	fmt.Println("Server is running on port ", config.GATEWAY_SERVICE_PORT)
-	if err := roter.Run(config.GATEWAY_SERVICE_PORT); err != nil {
+	fmt.Println("Server is running on port ", config.GATEWAY_USER_SERVICE_PORT)
+	if err := roter.Run(config.GATEWAY_USER_SERVICE_PORT); err != nil {
 		panic(err)
 	}
 }

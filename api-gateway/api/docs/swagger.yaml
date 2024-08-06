@@ -1,30 +1,4 @@
 definitions:
-  genprotos.CreateResultReq:
-    properties:
-      poll_id:
-        type: string
-      user_id:
-        type: string
-    type: object
-  genprotos.GetPoll:
-    properties:
-      poll_id:
-        type: string
-    type: object
-  genprotos.GetPollReq:
-    properties:
-      user_id:
-        type: string
-    type: object
-  genprotos.GetPollRes:
-    properties:
-      Poll:
-        items:
-          $ref: '#/definitions/genprotos.GetPoll'
-        type: array
-      user_id:
-        type: string
-    type: object
   genprotos.Pagination:
     properties:
       limit:
@@ -149,17 +123,6 @@ definitions:
         type: string
       working_experience:
         type: integer
-    type: object
-  genprotos.SavePollAnswerReq:
-    properties:
-      answer:
-        type: integer
-      question_num:
-        type: integer
-      result_id:
-        type: string
-    type: object
-  genprotos.Void:
     type: object
   models.ConfirmRegistrationReq:
     properties:
@@ -335,9 +298,9 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Successfully created!
           schema:
-            $ref: '#/definitions/genprotos.Void'
+            type: string
         "400":
           description: Invalid request payload
           schema:
@@ -366,9 +329,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully updated
           schema:
-            $ref: '#/definitions/genprotos.Void'
+            type: string
         "400":
           description: Invalid request payload
           schema:
@@ -401,9 +364,9 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Successfully deleted!
           schema:
-            $ref: '#/definitions/genprotos.Void'
+            type: string
         "400":
           description: Invalid request payload
           schema:
@@ -451,70 +414,36 @@ paths:
       summary: Get a poll by ID
       tags:
       - polls
-  /poll_answers:
-    post:
-      consumes:
-      - application/json
-      description: Save the answer for a specific question in a poll
-      parameters:
-      - description: Save Poll Answer Request
-        in: body
-        name: SavePollAnswerReq
-        required: true
-        schema:
-          $ref: '#/definitions/genprotos.SavePollAnswerReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/genprotos.Void'
-        "400":
-          description: Invalid request payload
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Save a poll answer
-      tags:
-      - results
   /polls:
     get:
       consumes:
       - application/json
-      description: Retrieve all polls associated with a user
+      description: Get all polls with pagination
       parameters:
-      - description: Get Poll Request
-        in: body
-        name: GetPollReq
-        required: true
-        schema:
-          $ref: '#/definitions/genprotos.GetPollReq'
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/genprotos.GetPollRes'
-        "400":
-          description: Invalid request payload
-          schema:
-            type: string
+            $ref: '#/definitions/genprotos.PollGetAllRes'
         "500":
           description: Server error
           schema:
             type: string
       security:
       - BearerAuth: []
-      summary: Get all polls for a user
+      summary: Get all polls
       tags:
-      - results
+      - polls
   /profile:
     get:
       consumes:
@@ -768,26 +697,19 @@ paths:
       tags:
       - registration
   /results:
-    post:
+    get:
       consumes:
       - application/json
-      description: Create a new result for a poll
-      parameters:
-      - description: Create Result Request
-        in: body
-        name: CreateResultReq
-        required: true
-        schema:
-          $ref: '#/definitions/genprotos.CreateResultReq'
+      description: Get overall results writing in excel file
       produces:
       - application/json
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
-            $ref: '#/definitions/genprotos.Void'
-        "400":
-          description: Invalid request payload
+            type: file
+        "404":
+          description: Poll not found
           schema:
             type: string
         "500":
@@ -796,7 +718,7 @@ paths:
             type: string
       security:
       - BearerAuth: []
-      summary: Create a new result
+      summary: Get results in excel file
       tags:
       - results
 securityDefinitions:

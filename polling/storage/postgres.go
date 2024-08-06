@@ -34,12 +34,14 @@ func NewPostgresStorage(config config.Config) (*Storage, error) {
 	um := managers.NewUserManager(db)
 	pm := managers.NewPollManager(db)
 	qm := managers.NewQuestionManager(db)
+	rm := managers.NewResultManager(db)
 
 	return &Storage{
 		PgClient:  db,
 		UserS:     um,
 		PollS:     pm,
 		QuestionS: qm,
+		ResultS:   rm,
 	}, nil
 }
 

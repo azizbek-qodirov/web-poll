@@ -23,28 +23,51 @@
         "num": 1,
         "poll_id": "1509efa1-58af-4e02-82f2-4823d7ef9fab"
     },
-
     [
         {
-            "poll_id": "1509efa1-58af-4e02-82f2-4823d7ef9fab",
-            "user_id": "***",
+            "poll_id": "e3a2920e-8f23-4603-8086-3dfd8cffaffb",
+            "user_id": "2525acff-6bd0-4426-a6eb-eba5cbb94780",
             "answers": [
                 {
                     "num": 1,
-                    "answer": 1
+                    "answer_point": 1
                     
                 },
                 {
                     "num": 2,
-                    "answer": 2
+                    "answer_point": 2
                 },
                 {
                     "num": 3,
-                    "answer": 1
+                    "answer_point": 1
                 },
                 {
                     "num": 4,
-                    "answer": 3
+                    "answer_point": 3
+                },
+                {
+                    "num": 5,
+                    "answer_point": 2
+                },
+                {
+                    "num": 6,
+                    "answer_point": 3
+                },
+                {
+                    "num": 7,
+                    "answer_point": 2
+                },
+                {
+                    "num": 8,
+                    "answer_point": 1
+                },
+                {
+                    "num": 9,
+                    "answer_point": 3
+                },
+                {
+                    "num": 10,
+                    "answer_point": 2
                 }
             ]
         }

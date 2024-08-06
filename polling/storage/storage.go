@@ -38,6 +38,7 @@ type QuestionI interface {
 }
 
 type ResultI interface {
-	CreateResult(ctx context.Context, req *pb.CreateResultReq) (*pb.Void, error)
+	CreateResult(ctx context.Context, req *pb.CreateResultReq) (*pb.CreateResultRes, error)
 	SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error)
+	GetResultsInExcel(ctx context.Context, req *pb.Void) (*pb.ExcelResultsRes, error)
 }

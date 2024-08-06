@@ -201,9 +201,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successfully updated",
                         "schema": {
-                            "$ref": "#/definitions/genprotos.Void"
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -256,9 +256,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "201": {
-                        "description": "Created",
+                        "description": "Successfully created!",
                         "schema": {
-                            "$ref": "#/definitions/genprotos.Void"
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -352,9 +352,9 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Successfully deleted!",
                         "schema": {
-                            "$ref": "#/definitions/genprotos.Void"
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -378,57 +378,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/poll_answers": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Save the answer for a specific question in a poll",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "results"
-                ],
-                "summary": "Save a poll answer",
-                "parameters": [
-                    {
-                        "description": "Save Poll Answer Request",
-                        "name": "SavePollAnswerReq",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/genprotos.SavePollAnswerReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/genprotos.Void"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request payload",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/polls": {
             "get": {
                 "security": [
@@ -436,7 +385,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve all polls associated with a user",
+                "description": "Get all polls with pagination",
                 "consumes": [
                     "application/json"
                 ],
@@ -444,31 +393,28 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "results"
+                    "polls"
                 ],
-                "summary": "Get all polls for a user",
+                "summary": "Get all polls",
                 "parameters": [
                     {
-                        "description": "Get Poll Request",
-                        "name": "GetPollReq",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/genprotos.GetPollReq"
-                        }
+                        "type": "integer",
+                        "description": "Limit",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Offset",
+                        "name": "offset",
+                        "in": "query"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/genprotos.GetPollRes"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request payload",
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/genprotos.PollGetAllRes"
                         }
                     },
                     "500": {
@@ -876,13 +822,13 @@ const docTemplate = `{
             }
         },
         "/results": {
-            "post": {
+            "get": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Create a new result for a poll",
+                "description": "Get overall results writing in excel file",
                 "consumes": [
                     "application/json"
                 ],
@@ -892,27 +838,16 @@ const docTemplate = `{
                 "tags": [
                     "results"
                 ],
-                "summary": "Create a new result",
-                "parameters": [
-                    {
-                        "description": "Create Result Request",
-                        "name": "CreateResultReq",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/genprotos.CreateResultReq"
-                        }
-                    }
-                ],
+                "summary": "Get results in excel file",
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/genprotos.Void"
+                            "type": "file"
                         }
                     },
-                    "400": {
-                        "description": "Invalid request payload",
+                    "404": {
+                        "description": "Poll not found",
                         "schema": {
                             "type": "string"
                         }
@@ -928,47 +863,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "genprotos.CreateResultReq": {
-            "type": "object",
-            "properties": {
-                "poll_id": {
-                    "type": "string"
-                },
-                "user_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "genprotos.GetPoll": {
-            "type": "object",
-            "properties": {
-                "poll_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "genprotos.GetPollReq": {
-            "type": "object",
-            "properties": {
-                "user_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "genprotos.GetPollRes": {
-            "type": "object",
-            "properties": {
-                "Poll": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/genprotos.GetPoll"
-                    }
-                },
-                "user_id": {
-                    "type": "string"
-                }
-            }
-        },
         "genprotos.Pagination": {
             "type": "object",
             "properties": {
@@ -1156,23 +1050,6 @@ const docTemplate = `{
                     "type": "integer"
                 }
             }
-        },
-        "genprotos.SavePollAnswerReq": {
-            "type": "object",
-            "properties": {
-                "answer": {
-                    "type": "integer"
-                },
-                "question_num": {
-                    "type": "integer"
-                },
-                "result_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "genprotos.Void": {
-            "type": "object"
         },
         "models.ConfirmRegistrationReq": {
             "type": "object",
