@@ -1,4 +1,4 @@
-name: Hello World
+name: Web polling service
 
 on:
   push:
@@ -10,7 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout our repository
       uses: actions/checkout@v4
@@ -26,22 +25,19 @@ jobs:
           git clone git@github.com:Azizbek-Qodirov/web-poll.git
           sudo docker network create global-net
 
-          cd forum-project
+          cd web-poll
+
+          cd polling
           sudo docker compose down
           sudo docker compose up -d
-          echo dir changed to forum-project main directory, up and down
+          echo dir changed to polling directory, up and down
 
           cd ../api-gateway
           sudo docker compose down
           sudo docker compose up -d
           echo dir changed to api-gateway directory, up and down
 
-          cd ../auth-service
+          cd ../api-gateway-user
           sudo docker compose down
           sudo docker compose up -d
-          echo dir changed to auth-service directory, up and down
-
-          cd ../forum-service
-          sudo docker compose down 
-          sudo docker compose up -d
-          echo dir changed to forum-service directory, up and down
+          echo dir changed to api-gatteway-user directory, up and down
