@@ -492,13 +492,6 @@ const docTemplate = `{
                 "summary": "Update an existing question",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "Question ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "Question update request",
                         "name": "question",
                         "in": "body",

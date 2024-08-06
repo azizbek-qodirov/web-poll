@@ -103,7 +103,6 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 				cell := fmt.Sprintf("%s%d", toAlphaString(i+1), rowNum)
 				f.SetCellValue(sheetName, cell, cellValue)
 			}
-
 			rowNum++
 		}
 

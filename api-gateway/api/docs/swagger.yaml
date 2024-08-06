@@ -510,11 +510,6 @@ paths:
       - application/json
       description: Update an existing question with the given details
       parameters:
-      - description: Question ID
-        in: path
-        name: id
-        required: true
-        type: string
       - description: Question update request
         in: body
         name: question
