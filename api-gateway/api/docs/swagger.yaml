@@ -111,7 +111,7 @@ definitions:
         type: string
       gender:
         type: string
-      level:
+      level_type:
         type: string
       name:
         type: string

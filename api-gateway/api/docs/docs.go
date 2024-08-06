@@ -1024,7 +1024,7 @@ const docTemplate = `{
                 "gender": {
                     "type": "string"
                 },
-                "level": {
+                "level_type": {
                     "type": "string"
                 },
                 "name": {
