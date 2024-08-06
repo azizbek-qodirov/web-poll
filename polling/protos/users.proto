@@ -23,7 +23,7 @@ message RegisterReq {
     string password = 5;
     string phone_number = 6;
     int32 working_experience = 7;
-    LevelType level = 8;
+    string level = 8;
 }
 
 message RegisterReqForSwagger{
@@ -79,12 +79,6 @@ message GetProfileByIdResp {
 enum GenderType {
     MALE = 0;
     FEMALE = 1;
-}
-
-enum LevelType {
-    JUNIOR = 0;
-    MIDDLE = 1;
-    SENIOR = 2;
 }
 
 message UserExcelResp {

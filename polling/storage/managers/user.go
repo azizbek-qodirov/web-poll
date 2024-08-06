@@ -27,17 +27,8 @@ func (m *UserManager) Register(context context.Context, req *pb.RegisterReq) (*p
 		gender = "female"
 	}
 
-	var level string
-	if req.Level == 0 {
-		level = "junior"
-	} else if req.Level == 1 {
-		level = "middle"
-	} else {
-		level = "senior"
-	}
-
 	query := "INSERT INTO users (id, name, surname, gender, email, password, phone_number, working_experience, level) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
-	_, err := m.Conn.Exec(query, uuid.NewString(), req.Name, req.Surname, gender, req.Email, req.Password, req.PhoneNumber, req.WorkingExperience, level)
+	_, err := m.Conn.Exec(query, uuid.NewString(), req.Name, req.Surname, gender, req.Email, req.Password, req.PhoneNumber, req.WorkingExperience, req.Level)
 	return nil, err
 }
 
