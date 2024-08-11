@@ -574,7 +574,7 @@ paths:
       summary: Get a question by ID
       tags:
       - question
-  /questions/{id}:
+  /questions/{poll_id}:
     get:
       consumes:
       - application/json

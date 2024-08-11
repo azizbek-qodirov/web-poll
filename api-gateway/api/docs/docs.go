@@ -642,7 +642,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/questions/{id}": {
+        "/questions/{poll_id}": {
             "get": {
                 "security": [
                     {
