@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	pb "auth-service/genprotos"
@@ -122,7 +123,8 @@ func (h *HTTPHandler) GetAllQuestions(c *gin.Context) {
 	req := pb.QuestionGetAllReq{
 		PollId: poll_id,
 	}
-	res, err := h.Question.GetAll(context.Background(), &req)
+	fmt.Println(poll_id)
+	res, err := h.Question.GetAll(c, &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
