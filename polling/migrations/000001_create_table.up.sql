@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Create polls table
 CREATE TABLE IF NOT EXISTS polls (
-    id UUID PRIMARY KEY,
-    poll_num SERIAL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    poll_num INT,
     title VARCHAR(255) NOT NULL,
     options JSONB NOT NULL
 );
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS polls (
 -- Create questions table
 CREATE TABLE IF NOT EXISTS questions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    num SERIAL,
+    num INT,
     content TEXT NOT NULL,
     poll_id UUID REFERENCES polls(id) ON DELETE CASCADE,
     UNIQUE (poll_id, num)
@@ -41,14 +41,14 @@ CREATE TABLE IF NOT EXISTS questions (
 
 -- ############# Storing Results
 CREATE TABLE IF NOT EXISTS results (
-    id UUID PRIMARY KEY,
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
-    poll_id UUID REFERENCES polls(id) ON DELETE CASCADE
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    poll_id UUID REFERENCES polls(id)
 );
 
 CREATE TABLE IF NOT EXISTS poll_answers (
-    id UUID PRIMARY KEY,
-    result_id UUID REFERENCES results(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    result_id UUID REFERENCES results(id),
     question_num INT,
     answer INT
 );

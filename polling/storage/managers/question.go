@@ -58,16 +58,8 @@ func (m *QuestionManager) Delete(ctx context.Context, req *pb.ByID) (*pb.Void, e
 }
 
 func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq) (*pb.QuestionGetAllRes, error) {
-	query := "SELECT id, num, content, poll_id FROM questions"
-	var args []interface{}
-	paramIndex := 1
-	if req.PollId != "" {
-		query += fmt.Sprintf(" WHERE poll_id = $%d", paramIndex)
-		args = append(args, req.PollId)
-		paramIndex++
-	}
-
-	rows, err := m.Conn.QueryContext(ctx, query, args...)
+	query := "SELECT id, num, content, poll_id FROM questions WHERE poll_id = $1"
+	rows, err := m.Conn.QueryContext(ctx, query, req.PollId)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get all questions: %w", err)
 	}
