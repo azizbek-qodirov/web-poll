@@ -50,7 +50,7 @@ func (m *PollManager) Update(ctx context.Context, poll *pb.PollUpdateReq) (*pb.V
 	_, err := m.Conn.ExecContext(ctx, query, poll.Title, poll.Id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update poll: %w", err)
-	}
+	} 
 	return &pb.Void{}, nil
 }
 
