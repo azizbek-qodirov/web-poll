@@ -18,11 +18,12 @@ service PollService {
 
 message PollCreateReq {
     string title = 1;
-    repeated Options options = 2;
-}
+    repeated Option options = 2;
 
-message Options {
-    map<string, string> options = 2;
+    message Option {
+        string key = 1;
+        string value = 2;
+    }
 }
 
 message PollUpdateReq {
