@@ -56,6 +56,7 @@ func (m *QuestionManager) Delete(ctx context.Context, req *pb.ByID) (*pb.Void, e
 	}
 	return &pb.Void{}, nil
 }
+
 func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq) (*pb.QuestionGetAllRes, error) {
 	questionQuery := "SELECT id, num, content, poll_id FROM questions WHERE poll_id = $1"
 	rows, err := m.Conn.QueryContext(ctx, questionQuery, req.PollId)
