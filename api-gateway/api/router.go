@@ -59,7 +59,7 @@ func NewRouter(PollConn *grpc.ClientConn) *gin.Engine {
 		question.DELETE("/:id", h.DeleteQuestion)
 		question.GET("/:id", h.GetQuestionByID)
 	}
-	for_admin.GET("/questions", h.GetAllQuestions)
+	for_admin.GET("/questions/:poll_id", h.GetAllQuestions)
 
 	return router
 }
