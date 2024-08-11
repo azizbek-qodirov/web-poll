@@ -31,7 +31,7 @@ func (m *PollManager) Create(ctx context.Context, poll *pb.PollCreateReq) (*pb.V
 }
 
 func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByIDRes, error) {
-	query := "SELECT id, title, options FROM polls WHERE id = $1"
+	query := "SELECT id, poll_num, title, options FROM polls WHERE id = $1"
 	row := m.Conn.QueryRowContext(ctx, query, req.Id)
 
 	var res pb.PollGetByIDRes
