@@ -49,6 +49,6 @@ CREATE TABLE IF NOT EXISTS results (
 CREATE TABLE IF NOT EXISTS poll_answers (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     result_id UUID REFERENCES results(id),
-    question_num INT,
+    question_id UUID REFERENCES questions(id),
     answer INT
 );

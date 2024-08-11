@@ -21,8 +21,8 @@ message PollCreateReq {
     repeated Option options = 2;
 
     message Option {
-        string key = 1;
-        string value = 2;
+        string variant = 1;
+        int32 ball = 2;
     }
 }
 

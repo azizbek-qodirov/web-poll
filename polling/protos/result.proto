@@ -39,7 +39,7 @@ message IncomingResult {
 }
 
 message IncomingAnswer {
-    string question_id = 1;
+    int32 question_num = 1;
     int32 answer_point = 2;
 }
 

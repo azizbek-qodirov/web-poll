@@ -36,13 +36,12 @@ func (m *ResultManager) SavePollAnswer(ctx context.Context, req *pb.SavePollAnsw
 	}
 	return nil, nil
 }
-
 func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*pb.ExcelResultsRes, error) {
 	query := `
 		SELECT 
 			u.name, u.surname, u.gender, u.email, u.phone_number, u.working_experience, u.level_type,
 			p.poll_num,
-			pa.question_id, pa.answer
+			q.num AS question_num, pa.answer
 		FROM 
 			results r
 		JOIN 
@@ -50,9 +49,11 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 		JOIN 
 			poll_answers pa ON r.id = pa.result_id
 		JOIN 
+			questions q ON pa.question_id = q.id
+		JOIN 
 			polls p ON r.poll_id = p.id
 		ORDER BY 
-			u.id, p.poll_num, pa.question_num;
+			u.id, p.poll_num, q.num;
 	`
 
 	rows, err := m.Conn.QueryContext(ctx, query)
@@ -63,11 +64,10 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 
 	resultsMap := make(map[string]*pb.ResultRes)
 	for rows.Next() {
-		var name, surname, gender, email, phoneNumber, level_type, questionId string
-		var workingExperience int32
-		var pollNum, answer int32
+		var name, surname, gender, email, phoneNumber, level_type string
+		var workingExperience, pollNum, questionNum, answer int32
 
-		err := rows.Scan(&name, &surname, &gender, &email, &phoneNumber, &workingExperience, &level_type, &pollNum, &questionId, &answer)
+		err := rows.Scan(&name, &surname, &gender, &email, &phoneNumber, &workingExperience, &level_type, &pollNum, &questionNum, &answer)
 		if err != nil {
 			return nil, err
 		}
@@ -85,7 +85,7 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 		resultKey := name + surname + string(pollNum)
 		if result, exists := resultsMap[resultKey]; exists {
 			result.Answers = append(result.Answers, &pb.IncomingAnswer{
-				QuestionId:  questionId,
+				QuestionNum: questionNum,
 				AnswerPoint: answer,
 			})
 		} else {
@@ -94,8 +94,8 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 				PollNum: pollNum,
 				Answers: []*pb.IncomingAnswer{
 					{
-						QuestionId:  questionId,
-						AnswerPoint: answer,
+						QuestionNum: questionNum,
+							AnswerPoint: answer,
 					},
 				},
 			}
