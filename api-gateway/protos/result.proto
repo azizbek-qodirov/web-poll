@@ -28,6 +28,7 @@ message SavePollAnswerReq {
     int32 answer = 3;
 }
 
+
 message GetPoll {
     string poll_id = 1;
 }

@@ -933,10 +933,10 @@ const docTemplate = `{
         "genprotos.PollCreateReq_Option": {
             "type": "object",
             "properties": {
-                "key": {
-                    "type": "string"
+                "ball": {
+                    "type": "integer"
                 },
-                "value": {
+                "variant": {
                     "type": "string"
                 }
             }
@@ -1151,6 +1151,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "refresh_token": {
+                    "type": "string"
+                },
+                "role": {
                     "type": "string"
                 }
             }

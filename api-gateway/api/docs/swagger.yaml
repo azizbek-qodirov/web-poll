@@ -28,9 +28,9 @@ definitions:
     type: object
   genprotos.PollCreateReq_Option:
     properties:
-      key:
-        type: string
-      value:
+      ball:
+        type: integer
+      variant:
         type: string
     type: object
   genprotos.PollGetAllRes:
@@ -171,6 +171,8 @@ definitions:
       access_token:
         type: string
       refresh_token:
+        type: string
+      role:
         type: string
     type: object
 info:

@@ -15,6 +15,7 @@ const (
 type Tokens struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
+	Role         string `json:"role"`
 }
 
 func GenerateJWTToken(userID string, email string, role string) *Tokens {
@@ -46,6 +47,7 @@ func GenerateJWTToken(userID string, email string, role string) *Tokens {
 	return &Tokens{
 		AccessToken:  access,
 		RefreshToken: refresh,
+		Role:         role,
 	}
 }
 
