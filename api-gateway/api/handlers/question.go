@@ -116,7 +116,7 @@ func (h *HTTPHandler) GetQuestionByID(c *gin.Context) {
 // @Success 200 {object} pb.QuestionGetAllRes
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 500 {object} string "Server error"
-// @Router /questions [get]
+// @Router /questions/{id} [get]
 // @Security BearerAuth
 func (h *HTTPHandler) GetAllQuestions(c *gin.Context) {
 	poll_id := c.Param("poll_id")
