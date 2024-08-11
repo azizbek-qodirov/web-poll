@@ -64,7 +64,7 @@ func (m *PollManager) Delete(ctx context.Context, req *pb.ByID) (*pb.Void, error
 }
 
 func (m *PollManager) GetAll(ctx context.Context, req *pb.PollGetAllReq) (*pb.PollGetAllRes, error) {
-	query := "SELECT id, title, options FROM polls WHERE 1 = 1"
+	query := "SELECT id, poll_num, title, options FROM polls WHERE 1 = 1"
 	var args []interface{}
 	paramIndex := 1
 
