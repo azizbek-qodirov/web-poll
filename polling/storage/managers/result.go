@@ -95,7 +95,7 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 				Answers: []*pb.IncomingAnswer{
 					{
 						QuestionNum: questionNum,
-							AnswerPoint: answer,
+						AnswerPoint: answer,
 					},
 				},
 			}

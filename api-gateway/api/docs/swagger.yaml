@@ -17,20 +17,20 @@ definitions:
       user_id:
         type: string
     type: object
-  genprotos.PollCreateReq:
-    properties:
-      options:
-        items:
-          $ref: '#/definitions/genprotos.PollCreateReq_Option'
-        type: array
-      title:
-        type: string
-    type: object
-  genprotos.PollCreateReq_Option:
+  genprotos.Option:
     properties:
       ball:
         type: integer
       variant:
+        type: string
+    type: object
+  genprotos.PollCreateReq:
+    properties:
+      options:
+        items:
+          $ref: '#/definitions/genprotos.Option'
+        type: array
+      title:
         type: string
     type: object
   genprotos.PollGetAllRes:
@@ -45,7 +45,9 @@ definitions:
       id:
         type: string
       options:
-        type: string
+        items:
+          $ref: '#/definitions/genprotos.Option'
+        type: array
       poll_num:
         type: integer
       title:
@@ -78,6 +80,8 @@ definitions:
     type: object
   genprotos.QuestionGetAllRes:
     properties:
+      poll:
+        $ref: '#/definitions/genprotos.PollGetByIDRes'
       question:
         items:
           $ref: '#/definitions/genprotos.Question'

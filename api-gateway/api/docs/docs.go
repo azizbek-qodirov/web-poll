@@ -916,27 +916,27 @@ const docTemplate = `{
                 }
             }
         },
-        "genprotos.PollCreateReq": {
-            "type": "object",
-            "properties": {
-                "options": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/genprotos.PollCreateReq_Option"
-                    }
-                },
-                "title": {
-                    "type": "string"
-                }
-            }
-        },
-        "genprotos.PollCreateReq_Option": {
+        "genprotos.Option": {
             "type": "object",
             "properties": {
                 "ball": {
                     "type": "integer"
                 },
                 "variant": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.PollCreateReq": {
+            "type": "object",
+            "properties": {
+                "options": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.Option"
+                    }
+                },
+                "title": {
                     "type": "string"
                 }
             }
@@ -959,7 +959,10 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "options": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.Option"
+                    }
                 },
                 "poll_num": {
                     "type": "integer"
@@ -1011,6 +1014,9 @@ const docTemplate = `{
         "genprotos.QuestionGetAllRes": {
             "type": "object",
             "properties": {
+                "poll": {
+                    "$ref": "#/definitions/genprotos.PollGetByIDRes"
+                },
                 "question": {
                     "type": "array",
                     "items": {

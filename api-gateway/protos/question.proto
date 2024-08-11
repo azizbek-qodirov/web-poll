@@ -46,13 +46,3 @@ message Question {
     string content = 3;
     string poll_id = 4;
 }
-
-// message QuestionGetAllResForSwagger {
-//     repeated QuestionForSwagger question = 1;
-// }
-
-// message QuestionForSwagger {
-//     string id = 1; 
-//     string content = 2;
-//     string poll_id = 3;
-// }

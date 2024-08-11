@@ -34,15 +34,34 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 	query := "SELECT id, poll_num, title, options FROM polls WHERE id = $1"
 	row := m.Conn.QueryRowContext(ctx, query, req.Id)
 
-	var res pb.PollGetByIDRes
-	err := row.Scan(&res.Id, &res.PollNum, &res.Title, &res.Options)
+	var (
+		id      string
+		pollNum int32
+		title   string
+		options string
+	)
+
+	err := row.Scan(&id, &pollNum, &title, &options)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("poll not found: %w", err)
 		}
 		return nil, fmt.Errorf("failed to get poll by id: %w", err)
 	}
-	return &res, nil
+
+	var optionList []*pb.Option
+	if options != "" {
+		if err := json.Unmarshal([]byte(options), &optionList); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal options: %w", err)
+		}
+	}
+
+	return &pb.PollGetByIDRes{
+		Id:      id,
+		PollNum: pollNum,
+		Title:   title,
+		Options: optionList,
+	}, nil
 }
 
 func (m *PollManager) Update(ctx context.Context, poll *pb.PollUpdateReq) (*pb.Void, error) {
@@ -69,7 +88,7 @@ func (m *PollManager) GetAll(ctx context.Context, req *pb.PollGetAllReq) (*pb.Po
 	paramIndex := 1
 
 	if req.UserId != "" {
-		query += fmt.Sprintf(" AND user_id = %d", paramIndex)
+		query += fmt.Sprintf(" AND user_id = $%d", paramIndex)
 		args = append(args, req.UserId)
 		paramIndex++
 	}
@@ -82,12 +101,31 @@ func (m *PollManager) GetAll(ctx context.Context, req *pb.PollGetAllReq) (*pb.Po
 
 	var polls []*pb.PollGetByIDRes
 	for rows.Next() {
-		var poll pb.PollGetByIDRes
-		err := rows.Scan(&poll.Id, &poll.PollNum, &poll.Title, &poll.Options)
+		var (
+			id      string
+			pollNum int32
+			title   string
+			options string
+		)
+
+		err := rows.Scan(&id, &pollNum, &title, &options)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan poll: %w", err)
 		}
-		polls = append(polls, &poll)
+
+		var optionList []*pb.Option
+		if options != "" {
+			if err := json.Unmarshal([]byte(options), &optionList); err != nil {
+				return nil, fmt.Errorf("failed to unmarshal options: %w", err)
+			}
+		}
+
+		polls = append(polls, &pb.PollGetByIDRes{
+			Id:      id,
+			PollNum: pollNum,
+			Title:   title,
+			Options: optionList,
+		})
 	}
 
 	if err := rows.Err(); err != nil {
