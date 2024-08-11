@@ -17,7 +17,7 @@ func NewPollManager(conn *sql.DB) *PollManager {
 }
 
 func (m *PollManager) Create(ctx context.Context, poll *pb.PollCreateReq) (*pb.Void, error) {
-	query := "INSERT INTO polls (title, options) VALUES ($1, $2)"
+	query := "SELECT insert_poll($1, $2)"
 	optionsJSON, err := json.Marshal(poll.Options)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal options to JSON: %w", err)
@@ -50,7 +50,7 @@ func (m *PollManager) Update(ctx context.Context, poll *pb.PollUpdateReq) (*pb.V
 	_, err := m.Conn.ExecContext(ctx, query, poll.Title, poll.Id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update poll: %w", err)
-	} 
+	}
 	return &pb.Void{}, nil
 }
 

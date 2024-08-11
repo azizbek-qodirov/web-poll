@@ -16,8 +16,8 @@ func NewQuestionManager(conn *sql.DB) *QuestionManager {
 }
 
 func (m *QuestionManager) Create(ctx context.Context, question *pb.QuestionCreateReq) (*pb.Void, error) {
-	query := "INSERT INTO questions (content, poll_id) VALUES ($1, $2)"
-	_, err := m.Conn.Exec(query, question.Content, question.PollId)
+	query := "SELECT insert_question($1, $2)"
+	_, err := m.Conn.ExecContext(ctx, query, question.Content, question.PollId)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create question: %w", err)
 	}
