@@ -17,20 +17,20 @@ definitions:
       user_id:
         type: string
     type: object
-  genprotos.Options:
-    properties:
-      options:
-        additionalProperties:
-          type: string
-        type: object
-    type: object
   genprotos.PollCreateReq:
     properties:
       options:
         items:
-          $ref: '#/definitions/genprotos.Options'
+          $ref: '#/definitions/genprotos.PollCreateReq_Option'
         type: array
       title:
+        type: string
+    type: object
+  genprotos.PollCreateReq_Option:
+    properties:
+      key:
+        type: string
+      value:
         type: string
     type: object
   genprotos.PollGetAllRes:

@@ -916,27 +916,27 @@ const docTemplate = `{
                 }
             }
         },
-        "genprotos.Options": {
-            "type": "object",
-            "properties": {
-                "options": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
-                    }
-                }
-            }
-        },
         "genprotos.PollCreateReq": {
             "type": "object",
             "properties": {
                 "options": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/genprotos.Options"
+                        "$ref": "#/definitions/genprotos.PollCreateReq_Option"
                     }
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "genprotos.PollCreateReq_Option": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string"
+                },
+                "value": {
                     "type": "string"
                 }
             }
