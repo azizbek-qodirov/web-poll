@@ -5,7 +5,7 @@ package polling;
 option go_package = "genprotos/";
 
 import "protos/void.proto";
-// import "void.proto";
+import "protos/poll.proto";
 
 service QuestionService {
     rpc Create(QuestionCreateReq) returns (Void);
@@ -33,6 +33,7 @@ message QuestionGetByIDRes {
 
 message QuestionGetAllRes {
     repeated Question question = 1;
+    PollGetByIDRes poll = 2;
 }
 
 message QuestionGetAllReq {
@@ -45,13 +46,3 @@ message Question {
     string content = 3;
     string poll_id = 4;
 }
-
-// message QuestionGetAllResForSwagger {
-//     repeated QuestionForSwagger question = 1;
-// }
-
-// message QuestionForSwagger {
-//     string id = 1; 
-//     string content = 2;
-//     string poll_id = 3;
-// }

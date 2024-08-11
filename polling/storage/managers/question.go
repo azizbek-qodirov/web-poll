@@ -56,10 +56,9 @@ func (m *QuestionManager) Delete(ctx context.Context, req *pb.ByID) (*pb.Void, e
 	}
 	return &pb.Void{}, nil
 }
-
 func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq) (*pb.QuestionGetAllRes, error) {
-	query := "SELECT id, num, content, poll_id FROM questions WHERE poll_id = $1"
-	rows, err := m.Conn.QueryContext(ctx, query, req.PollId)
+	questionQuery := "SELECT id, num, content, poll_id FROM questions WHERE poll_id = $1"
+	rows, err := m.Conn.QueryContext(ctx, questionQuery, req.PollId)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get all questions: %w", err)
 	}
@@ -79,7 +78,21 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 		return nil, fmt.Errorf("rows error: %w", err)
 	}
 
+	pollQuery := "SELECT id, poll_num, title, options FROM polls WHERE id = $1"
+	var poll pb.PollGetByIDRes
+	err = m.Conn.QueryRowContext(ctx, pollQuery, req.PollId).Scan(&poll.Id, &poll.PollNum, &poll.Title, &poll.Options)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return &pb.QuestionGetAllRes{
+				Question: []*pb.Question{},
+				Poll:     nil,
+			}, nil
+		}
+		return nil, fmt.Errorf("failed to get poll details: %w", err)
+	}
+
 	return &pb.QuestionGetAllRes{
 		Question: questions,
+		Poll:     &poll,
 	}, nil
 }
