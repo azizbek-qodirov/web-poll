@@ -1,31 +1,3 @@
-
-Skip to content
-Navigation Menu
-
-    Azizbek-Qodirov
-    /
-    web-poll
-
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-
-    Settings
-
-Web Polling Service
-done #14
-
-Jobs
-
-Run details
-
-Workflow file for this run
-.github/workflows/deploy.yml at 59552a2
 name: Web Polling Service
 
 on:
@@ -84,5 +56,3 @@ jobs:
             log_error "---------------- API-GATEWAY SERVICES STOPPED ----------------"
             sudo docker compose up --build -d
             log_success "---------------- API-GATEWAY SERVICES STARTED ----------------"
-done · Azizbek-Qodirov/web-poll@59552a2
-
