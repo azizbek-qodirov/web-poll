@@ -1,11 +1,4 @@
 definitions:
-  genprotos.Pagination:
-    properties:
-      limit:
-        type: integer
-      offset:
-        type: integer
-    type: object
   genprotos.PollCreateReq:
     properties:
       options:
@@ -13,15 +6,11 @@ definitions:
           type: string
         description: JSONB is stored as a string
         type: object
-      poll_num:
-        type: integer
       title:
         type: string
     type: object
   genprotos.PollGetAllRes:
     properties:
-      pagination:
-        $ref: '#/definitions/genprotos.Pagination'
       poll:
         items:
           $ref: '#/definitions/genprotos.PollGetByIDRes'
@@ -43,8 +32,6 @@ definitions:
     properties:
       id:
         type: string
-      poll_num:
-        type: integer
       title:
         type: string
     type: object
@@ -53,28 +40,22 @@ definitions:
       content:
         type: string
       id:
-        description: ID of the question
         type: string
       num:
         type: integer
       poll_id:
-        description: Reference to Poll ID
         type: string
     type: object
   genprotos.QuestionCreateReq:
     properties:
       content:
         type: string
-      num:
-        type: integer
       poll_id:
-        description: Reference to Poll ID
         type: string
     type: object
   genprotos.QuestionGetAllRes:
     properties:
       question:
-        description: List of questions
         items:
           $ref: '#/definitions/genprotos.Question'
         type: array
@@ -84,12 +65,8 @@ definitions:
       content:
         type: string
       id:
-        description: ID of the question
         type: string
-      num:
-        type: integer
       poll_id:
-        description: Reference to Poll ID
         type: string
     type: object
   genprotos.QuestionUpdateReq:
@@ -97,12 +74,6 @@ definitions:
       content:
         type: string
       id:
-        description: ID of the question to be updated
-        type: string
-      num:
-        type: integer
-      poll_id:
-        description: Reference to Poll ID
         type: string
     type: object
   genprotos.RegisterReqForSwagger:
@@ -419,15 +390,6 @@ paths:
       consumes:
       - application/json
       description: Get all polls with pagination
-      parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
       produces:
       - application/json
       responses:
@@ -595,14 +557,11 @@ paths:
       - application/json
       description: Get all questions with pagination
       parameters:
-      - description: Limit
-        in: query
-        name: limit
-        type: integer
-      - description: Offset
-        in: query
-        name: offset
-        type: integer
+      - description: Poll ID
+        in: path
+        name: poll_id
+        required: true
+        type: string
       produces:
       - application/json
       responses:

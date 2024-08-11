@@ -396,20 +396,6 @@ const docTemplate = `{
                     "polls"
                 ],
                 "summary": "Get all polls",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -676,16 +662,11 @@ const docTemplate = `{
                 "summary": "Get all questions",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
+                        "type": "string",
+                        "description": "Poll ID",
+                        "name": "poll_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -856,17 +837,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "genprotos.Pagination": {
-            "type": "object",
-            "properties": {
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                }
-            }
-        },
         "genprotos.PollCreateReq": {
             "type": "object",
             "properties": {
@@ -877,9 +847,6 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
-                "poll_num": {
-                    "type": "integer"
-                },
                 "title": {
                     "type": "string"
                 }
@@ -888,9 +855,6 @@ const docTemplate = `{
         "genprotos.PollGetAllRes": {
             "type": "object",
             "properties": {
-                "pagination": {
-                    "$ref": "#/definitions/genprotos.Pagination"
-                },
                 "poll": {
                     "type": "array",
                     "items": {
@@ -923,9 +887,6 @@ const docTemplate = `{
                 "id": {
                     "type": "string"
                 },
-                "poll_num": {
-                    "type": "integer"
-                },
                 "title": {
                     "type": "string"
                 }
@@ -938,14 +899,12 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "description": "ID of the question",
                     "type": "string"
                 },
                 "num": {
                     "type": "integer"
                 },
                 "poll_id": {
-                    "description": "Reference to Poll ID",
                     "type": "string"
                 }
             }
@@ -956,11 +915,7 @@ const docTemplate = `{
                 "content": {
                     "type": "string"
                 },
-                "num": {
-                    "type": "integer"
-                },
                 "poll_id": {
-                    "description": "Reference to Poll ID",
                     "type": "string"
                 }
             }
@@ -969,7 +924,6 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "question": {
-                    "description": "List of questions",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/genprotos.Question"
@@ -984,14 +938,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "description": "ID of the question",
                     "type": "string"
                 },
-                "num": {
-                    "type": "integer"
-                },
                 "poll_id": {
-                    "description": "Reference to Poll ID",
                     "type": "string"
                 }
             }
@@ -1003,14 +952,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "id": {
-                    "description": "ID of the question to be updated",
-                    "type": "string"
-                },
-                "num": {
-                    "type": "integer"
-                },
-                "poll_id": {
-                    "description": "Reference to Poll ID",
                     "type": "string"
                 }
             }

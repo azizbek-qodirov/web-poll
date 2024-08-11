@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-	"strconv"
 
 	pb "auth-service/genprotos"
 
@@ -113,29 +111,16 @@ func (h *HTTPHandler) GetQuestionByID(c *gin.Context) {
 // @Tags question
 // @Accept json
 // @Produce json
-// @Param limit query int false "Limit"
-// @Param offset query int false "Offset"
+// @Param poll_id path string true "Poll ID"
 // @Success 200 {object} pb.QuestionGetAllRes
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 500 {object} string "Server error"
 // @Router /questions [get]
 // @Security BearerAuth
 func (h *HTTPHandler) GetAllQuestions(c *gin.Context) {
-	var req pb.QuestionGetAllReq
-	limit, offset := 10, 0
-	limitStr, offsetStr := c.Query("limit"), c.Query("offset")
-	fmt.Println(limitStr, offsetStr)
-	limit, _ = strconv.Atoi(limitStr)
-	offset, _ = strconv.Atoi(offsetStr)
-
-	req.Pagination = &pb.Pagination{
-		Limit:  int64(limit),
-		Offset: int64(offset),
-	}
-
-	if err := c.ShouldBindQuery(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
+	poll_id := c.Param("poll_id")
+	req := pb.QuestionGetAllReq{
+		PollId: poll_id,
 	}
 	res, err := h.Question.GetAll(context.Background(), &req)
 	if err != nil {

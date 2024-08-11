@@ -16,37 +16,42 @@ service QuestionService {
 }
 
 message QuestionCreateReq {
-    int32 num = 1;
-    string content = 2;
-    string poll_id = 3; // Reference to Poll ID
+    string content = 3;
+    string poll_id = 4;
 }
 
 message QuestionUpdateReq {
-    string id = 1;      // ID of the question to be updated
-    int32 num = 2;
-    string content = 3;
-    string poll_id = 4; // Reference to Poll ID
+    string id = 1;
+    string content = 2;
 }
 
 message QuestionGetByIDRes {
-    string id = 1;      // ID of the question
-    int32 num = 2;
-    string content = 3;
-    string poll_id = 4; // Reference to Poll ID
+    string id = 1; 
+    string content = 2;
+    string poll_id = 3;
 }
 
 message QuestionGetAllRes {
-    repeated Question question = 1; // List of questions
+    repeated Question question = 1;
 }
 
 message QuestionGetAllReq {
     string poll_id = 1;
-    Pagination Pagination = 2;
 }
 
 message Question {
-    string id = 1;      // ID of the question
+    string id = 1; 
     int32 num = 2;
     string content = 3;
-    string poll_id = 4; // Reference to Poll ID
+    string poll_id = 4;
 }
+
+// message QuestionGetAllResForSwagger {
+//     repeated QuestionForSwagger question = 1;
+// }
+
+// message QuestionForSwagger {
+//     string id = 1; 
+//     string content = 2;
+//     string poll_id = 3;
+// }

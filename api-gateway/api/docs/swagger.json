@@ -385,20 +385,6 @@
                     "polls"
                 ],
                 "summary": "Get all polls",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -665,16 +651,11 @@
                 "summary": "Get all questions",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Limit",
-                        "name": "limit",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Offset",
-                        "name": "offset",
-                        "in": "query"
+                        "type": "string",
+                        "description": "Poll ID",
+                        "name": "poll_id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -845,17 +826,6 @@
         }
     },
     "definitions": {
-        "genprotos.Pagination": {
-            "type": "object",
-            "properties": {
-                "limit": {
-                    "type": "integer"
-                },
-                "offset": {
-                    "type": "integer"
-                }
-            }
-        },
         "genprotos.PollCreateReq": {
             "type": "object",
             "properties": {
@@ -866,9 +836,6 @@
                         "type": "string"
                     }
                 },
-                "poll_num": {
-                    "type": "integer"
-                },
                 "title": {
                     "type": "string"
                 }
@@ -877,9 +844,6 @@
         "genprotos.PollGetAllRes": {
             "type": "object",
             "properties": {
-                "pagination": {
-                    "$ref": "#/definitions/genprotos.Pagination"
-                },
                 "poll": {
                     "type": "array",
                     "items": {
@@ -912,9 +876,6 @@
                 "id": {
                     "type": "string"
                 },
-                "poll_num": {
-                    "type": "integer"
-                },
                 "title": {
                     "type": "string"
                 }
@@ -927,14 +888,12 @@
                     "type": "string"
                 },
                 "id": {
-                    "description": "ID of the question",
                     "type": "string"
                 },
                 "num": {
                     "type": "integer"
                 },
                 "poll_id": {
-                    "description": "Reference to Poll ID",
                     "type": "string"
                 }
             }
@@ -945,11 +904,7 @@
                 "content": {
                     "type": "string"
                 },
-                "num": {
-                    "type": "integer"
-                },
                 "poll_id": {
-                    "description": "Reference to Poll ID",
                     "type": "string"
                 }
             }
@@ -958,7 +913,6 @@
             "type": "object",
             "properties": {
                 "question": {
-                    "description": "List of questions",
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/genprotos.Question"
@@ -973,14 +927,9 @@
                     "type": "string"
                 },
                 "id": {
-                    "description": "ID of the question",
                     "type": "string"
                 },
-                "num": {
-                    "type": "integer"
-                },
                 "poll_id": {
-                    "description": "Reference to Poll ID",
                     "type": "string"
                 }
             }
@@ -992,14 +941,6 @@
                     "type": "string"
                 },
                 "id": {
-                    "description": "ID of the question to be updated",
-                    "type": "string"
-                },
-                "num": {
-                    "type": "integer"
-                },
-                "poll_id": {
-                    "description": "Reference to Poll ID",
                     "type": "string"
                 }
             }

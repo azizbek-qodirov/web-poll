@@ -4,7 +4,6 @@ import (
 	pb "auth-service/genprotos"
 	"context"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -122,28 +121,17 @@ func (h *HTTPHandler) GetPollByID(c *gin.Context) {
 // @Tags polls
 // @Accept json
 // @Produce json
-// @Param limit query int false "Limit"
-// @Param offset query int false "Offset"
 // @Success 200 {object} pb.PollGetAllRes
 // @Failure 500 {object} string "Server error"
 // @Router /polls [get]
 // @Security BearerAuth
 func (h *HTTPHandler) GetAllPolls(c *gin.Context) {
 	var req pb.PollGetAllReq
-	limit, offset := 10, 0
-	limitStr, offsetStr := c.Query("limit"), c.Query("offset")
-	limit, _ = strconv.Atoi(limitStr)
-	offset, _ = strconv.Atoi(offsetStr)
-	req.Pagination = &pb.Pagination{
-		Limit:  int64(limit),
-		Offset: int64(offset),
-	}
 
 	res, err := h.Poll.GetAll(context.Background(), &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "details": err.Error()})
 		return
 	}
-
 	c.JSON(http.StatusOK, res)
 }

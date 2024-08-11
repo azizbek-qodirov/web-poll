@@ -1,4 +1,3 @@
--- Create the enum type for gender
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'gender_type') THEN
@@ -6,7 +5,6 @@ BEGIN
     END IF;
 END
 $$;
-
 
 -- Create users table
 CREATE TABLE IF NOT EXISTS users (
@@ -27,15 +25,15 @@ CREATE TABLE IF NOT EXISTS users (
 -- Create polls table
 CREATE TABLE IF NOT EXISTS polls (
     id UUID PRIMARY KEY,
-    poll_num INT UNIQUE NOT NULL,
+    poll_num SERIAL,
     title VARCHAR(255) NOT NULL,
     options JSONB NOT NULL
 );
 
 -- Create questions table
 CREATE TABLE IF NOT EXISTS questions (
-    id UUID PRIMARY KEY,
-    num INT NOT NULL,
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    num SERIAL,
     content TEXT NOT NULL,
     poll_id UUID REFERENCES polls(id) ON DELETE CASCADE,
     UNIQUE (poll_id, num)

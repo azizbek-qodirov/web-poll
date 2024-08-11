@@ -29,8 +29,8 @@ func (m *ResultManager) CreateResult(ctx context.Context, req *pb.CreateResultRe
 
 func (m *ResultManager) SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error) {
 
-	query := "INSERT INTO poll_answers (id, result_id, question_num, answer) VALUES ($1, $2, $3, $4)"
-	_, err := m.Conn.ExecContext(ctx, query, uuid.NewString(), req.ResultId, req.QuestionNum, req.Answer)
+	query := "INSERT INTO poll_answers (id, result_id, question_id, answer) VALUES ($1, $2, $3, $4)"
+	_, err := m.Conn.ExecContext(ctx, query, uuid.NewString(), req.ResultId, req.QuestionId, req.Answer)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 		SELECT 
 			u.name, u.surname, u.gender, u.email, u.phone_number, u.working_experience, u.level_type,
 			p.poll_num,
-			pa.question_num, pa.answer
+			pa.question_id, pa.answer
 		FROM 
 			results r
 		JOIN 
@@ -63,11 +63,11 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 
 	resultsMap := make(map[string]*pb.ResultRes)
 	for rows.Next() {
-		var name, surname, gender, email, phoneNumber, level_type string
+		var name, surname, gender, email, phoneNumber, level_type, questionId string
 		var workingExperience int32
-		var pollNum, questionNum, answer int32
+		var pollNum, answer int32
 
-		err := rows.Scan(&name, &surname, &gender, &email, &phoneNumber, &workingExperience, &level_type, &pollNum, &questionNum, &answer)
+		err := rows.Scan(&name, &surname, &gender, &email, &phoneNumber, &workingExperience, &level_type, &pollNum, &questionId, &answer)
 		if err != nil {
 			return nil, err
 		}
@@ -79,13 +79,13 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 			Email:             email,
 			PhoneNumber:       phoneNumber,
 			WorkingExperience: workingExperience,
-			LevelType:             level_type,
+			LevelType:         level_type,
 		}
 
 		resultKey := name + surname + string(pollNum)
 		if result, exists := resultsMap[resultKey]; exists {
 			result.Answers = append(result.Answers, &pb.IncomingAnswer{
-				Num:         questionNum,
+				QuestionId:  questionId,
 				AnswerPoint: answer,
 			})
 		} else {
@@ -94,7 +94,7 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 				PollNum: pollNum,
 				Answers: []*pb.IncomingAnswer{
 					{
-						Num:         questionNum,
+						QuestionId:  questionId,
 						AnswerPoint: answer,
 					},
 				},

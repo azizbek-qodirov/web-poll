@@ -50,3 +50,20 @@ func IsAdminMiddleware() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func IsUserMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		claims, exists := c.Get("claims")
+		if !exists {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+			c.Abort()
+			return
+		}
+		role := claims.(jwt.MapClaims)["role"].(string)
+		if role != "user" {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Forbidden"})
+			c.Abort()
+		}
+		c.Next()
+	}
+}

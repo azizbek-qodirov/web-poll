@@ -33,6 +33,10 @@ func NewRouter(PollConn *grpc.ClientConn) *gin.Engine {
 	protected.GET("/profile", h.Profile)
 	router.GET("/user/:id", h.GetByID)
 
+	// #################### USER SERVICE ######################### //
+	for_user := protected.Group("/", middleware.IsUserMiddleware())
+	for_user.POST("/send-answers", h.SendAnswers)
+
 	// #################### POLLING SERVICE ######################### //
 	for_admin := protected.Group("/", middleware.IsAdminMiddleware())
 

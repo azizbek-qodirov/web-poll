@@ -24,7 +24,7 @@ message CreateResultRes {
 
 message SavePollAnswerReq {
     string result_id = 1;
-    int32 question_num = 2;
+    string question_id = 2;
     int32 answer = 3;
 }
 
@@ -39,7 +39,7 @@ message IncomingResult {
 }
 
 message IncomingAnswer {
-    int32 num = 1;
+    string question_id = 1;
     int32 answer_point = 2;
 }
 

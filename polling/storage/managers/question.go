@@ -5,8 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	pb "poll-service/genprotos"
-
-	"github.com/google/uuid"
 )
 
 type QuestionManager struct {
@@ -18,8 +16,8 @@ func NewQuestionManager(conn *sql.DB) *QuestionManager {
 }
 
 func (m *QuestionManager) Create(ctx context.Context, question *pb.QuestionCreateReq) (*pb.Void, error) {
-	query := "INSERT INTO questions (id, num, content, poll_id) VALUES ($1, $2, $3, $4)"
-	_, err := m.Conn.Exec(query, uuid.NewString(), question.Num, question.Content, question.PollId)
+	query := "INSERT INTO questions (content, poll_id) VALUES ($1, $2)"
+	_, err := m.Conn.Exec(query, question.Content, question.PollId)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create question: %w", err)
 	}
@@ -27,11 +25,11 @@ func (m *QuestionManager) Create(ctx context.Context, question *pb.QuestionCreat
 }
 
 func (m *QuestionManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.QuestionGetByIDRes, error) {
-	query := "SELECT id, num, content, poll_id FROM questions WHERE id = $1"
+	query := "SELECT id, content, poll_id FROM questions WHERE id = $1"
 	row := m.Conn.QueryRowContext(ctx, query, req.Id)
 
 	var res pb.QuestionGetByIDRes
-	err := row.Scan(&res.Id, &res.Num, &res.Content, &res.PollId)
+	err := row.Scan(&res.Id, &res.Content, &res.PollId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("question not found: %w", err)
@@ -42,8 +40,8 @@ func (m *QuestionManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.Questi
 }
 
 func (m *QuestionManager) Update(ctx context.Context, question *pb.QuestionUpdateReq) (*pb.Void, error) {
-	query := "UPDATE questions SET num = $1, content = $2, poll_id = $3 WHERE id = $4"
-	_, err := m.Conn.ExecContext(ctx, query, question.Num, question.Content, question.PollId, question.Id)
+	query := "UPDATE questions SET content = $1 WHERE id = $2"
+	_, err := m.Conn.ExecContext(ctx, query, question.Content, question.Id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update question: %w", err)
 	}
@@ -66,16 +64,6 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 	if req.PollId != "" {
 		query += fmt.Sprintf(" WHERE poll_id = $%d", paramIndex)
 		args = append(args, req.PollId)
-		paramIndex++
-	}
-	if req.Pagination.Limit != 0 {
-		query += fmt.Sprintf(" LIMIT $%d", paramIndex)
-		args = append(args, req.Pagination.Limit)
-		paramIndex++
-	}
-	if req.Pagination.Offset != 0 {
-		query += fmt.Sprintf(" OFFSET $%d", paramIndex)
-		args = append(args, req.Pagination.Offset)
 		paramIndex++
 	}
 
