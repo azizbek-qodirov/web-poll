@@ -916,14 +916,24 @@ const docTemplate = `{
                 }
             }
         },
+        "genprotos.Options": {
+            "type": "object",
+            "properties": {
+                "options": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "genprotos.PollCreateReq": {
             "type": "object",
             "properties": {
                 "options": {
-                    "description": "JSONB is stored as a string",
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "string"
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.Options"
                     }
                 },
                 "title": {
@@ -949,7 +959,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "options": {
-                    "description": "JSONB is stored as a string",
                     "type": "string"
                 },
                 "poll_num": {

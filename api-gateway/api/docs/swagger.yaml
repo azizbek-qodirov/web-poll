@@ -17,13 +17,19 @@ definitions:
       user_id:
         type: string
     type: object
-  genprotos.PollCreateReq:
+  genprotos.Options:
     properties:
       options:
         additionalProperties:
           type: string
-        description: JSONB is stored as a string
         type: object
+    type: object
+  genprotos.PollCreateReq:
+    properties:
+      options:
+        items:
+          $ref: '#/definitions/genprotos.Options'
+        type: array
       title:
         type: string
     type: object
@@ -39,7 +45,6 @@ definitions:
       id:
         type: string
       options:
-        description: JSONB is stored as a string
         type: string
       poll_num:
         type: integer

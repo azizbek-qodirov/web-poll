@@ -18,7 +18,11 @@ service PollService {
 
 message PollCreateReq {
     string title = 1;
-    map<string, string> options = 2; // JSONB is stored as a string
+    repeated Options options = 2;
+}
+
+message Options {
+    map<string, string> options = 2;
 }
 
 message PollUpdateReq {
@@ -30,7 +34,7 @@ message PollGetByIDRes {
     string id = 1;
     int32 poll_num = 2;
     string title = 3;
-    string options = 4; // JSONB is stored as a string
+    string options = 4;
 }
 
 message PollGetAllReq {
