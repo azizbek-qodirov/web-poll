@@ -3,6 +3,7 @@ package managers
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	pb "poll-service/genprotos"
 )
@@ -81,7 +82,17 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 
 	pollQuery := "SELECT id, poll_num, title, options FROM polls WHERE id = $1"
 	var poll pb.PollGetByIDRes
-	err = m.Conn.QueryRowContext(ctx, pollQuery, req.PollId).Scan(&poll.Id, &poll.PollNum, &poll.Title, &poll.Options)
+	var pollNum int32
+	var options, title, pollId string
+	var optionList []*pb.Option
+
+	if options != "" {
+		if err := json.Unmarshal([]byte(options), &optionList); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal options: %s", err.Error())
+		}
+	}
+
+	err = m.Conn.QueryRowContext(ctx, pollQuery, req.PollId).Scan(&pollId, &pollNum, &title, &options)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return &pb.QuestionGetAllRes{
@@ -91,6 +102,11 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 		}
 		return nil, fmt.Errorf("failed to get poll details: %w", err)
 	}
+
+	poll.Id = pollId
+	poll.PollNum = pollNum
+	poll.Title = title
+	poll.Options = optionList
 
 	return &pb.QuestionGetAllRes{
 		Question: questions,
