@@ -53,6 +53,7 @@ func NewRouter(PollConn *grpc.ClientConn) *gin.Engine {
 
 	// #################### POLLING SERVICE ######################### //
 	for_admin := protected.Group("/", middleware.IsAdminMiddleware())
+	for_admin_or_user := protected.Group("/", middleware.IsAdminOrUserMiddleware())
 
 	for_admin.GET(("/results"), h.GetUserResultsInExcel)
 
@@ -61,19 +62,19 @@ func NewRouter(PollConn *grpc.ClientConn) *gin.Engine {
 		poll.POST("/", h.CreatePoll)
 		poll.PUT("/", h.UpdatePoll)
 		poll.DELETE("/:id", h.DeletePoll)
-		poll.GET("/:id", h.GetPollByID)
+		for_admin_or_user.GET("/:id", h.GetPollByID)
 	}
 
-	for_admin.GET("/polls", h.GetAllPolls)
+	for_admin_or_user.GET("/polls", h.GetAllPolls)
 
 	question := for_admin.Group("/question")
 	{
 		question.POST("/", h.CreateQuestion)
 		question.PUT("/", h.UpdateQuestion)
 		question.DELETE("/:id", h.DeleteQuestion)
-		question.GET("/:id", h.GetQuestionByID)
+		for_admin_or_user.GET("/:id", h.GetQuestionByID)
 	}
-	for_admin.GET("/questions/:poll_id", h.GetAllQuestions)
+	for_admin_or_user.GET("/questions/:poll_id", h.GetAllQuestions)
 
 	return router
 }
