@@ -116,7 +116,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 	}
 
 	// Define file path in /files directory
-	fileDir := "files"
+	fileDir := "/files"
 	fileName := "results.xlsx"
 	filePath := filepath.Join(fileDir, fileName)
 
