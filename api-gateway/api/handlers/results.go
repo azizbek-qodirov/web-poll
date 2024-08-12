@@ -13,6 +13,7 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+// toAlphaString converts a column number to an Excel-style column name (e.g., 1 -> A, 27 -> AA).
 func toAlphaString(n int) string {
 	var columnName string
 	for n > 0 {
@@ -114,19 +115,34 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 		return
 	}
 
+	// Define file path in /files directory
 	fileDir := "files"
 	fileName := "results.xlsx"
 	filePath := filepath.Join(fileDir, fileName)
 
+	// Create /files directory if it doesn't exist
 	if err := os.MkdirAll(fileDir, os.ModePerm); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory", "details": err.Error()})
 		return
 	}
 
+	// Write buffer to file
 	if err := os.WriteFile(filePath, buffer.Bytes(), 0644); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save Excel file", "details": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"file_path": filePath})
+	// Return full file path in response
+	absFilePath, err := filepath.Abs(filePath)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get absolute file path", "details": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"file_path": absFilePath})
+
+	// Optionally remove the file after returning the path (uncomment if needed)
+	// if err := os.Remove(absFilePath); err != nil {
+	// 	fmt.Printf("Warning: Failed to remove file %s: %v\n", absFilePath, err)
+	// }
 }
