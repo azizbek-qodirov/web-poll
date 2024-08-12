@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Poll</title>
+</head>
+<body>
+    <h1>Create a New Poll</h1>
+    <button id="createPollButton">Create Poll</button>
+
+    <script>
+        document.getElementById('createPollButton').addEventListener('click', function() {
+            // Define the URL of the API
+            const apiUrl = 'http://15.237.118.112:8080/api/poll';
+
+            // Define the poll data you want to send
+            const pollData = {
+                title: "Sample Poll Title",
+                options: [
+                    { variant: "Option 1", ball: 1 },
+                    { variant: "Option 2", ball: 2 },
+                    { variant: "Option 3", ball: 3 }
+                ]
+            };
+
+            // Send a POST request to create the new poll
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFvZGlyb3Zheml6YmVrMjQ5QGdtYWlsLmNvbSIsImV4cCI6MTcyMzUzNDk3NywiaWF0IjoxNzIzNDQ4NTc3LCJyb2xlIjoidXNlciIsInVzZXJfaWQiOiJhMWRmOTg1YS1lNTc1LTQ5MDMtOTNjMS1hM2UxMGE5MDBjZDkifQ.vxC2mrZfggTzpHT_sBw2_iVizEX5yBq7fEr9uV9xYy4' // Replace with your actual token
+                },
+                body: JSON.stringify(pollData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Poll created successfully:', data);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+        });
+    </script>
+</body>
+</html>
