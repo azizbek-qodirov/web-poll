@@ -13,7 +13,6 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
-// toAlphaString converts a column number to an Excel-style column name (e.g., 1 -> A, 27 -> AA).
 func toAlphaString(n int) string {
 	var columnName string
 	for n > 0 {
@@ -30,7 +29,7 @@ func toAlphaString(n int) string {
 // @Tags results
 // @Accept json
 // @Produce json
-// @Success 200 {file} application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+// @Success 200 {object} map[string]string "File path"
 // @Failure 404 {object} string "Poll not found"
 // @Failure 500 {object} string "Server error"
 // @Router /results [GET]
@@ -115,16 +114,19 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 		return
 	}
 
+	fileDir := "files"
 	fileName := "results.xlsx"
-	filePath := filepath.Join("", fileName)
+	filePath := filepath.Join(fileDir, fileName)
+
+	if err := os.MkdirAll(fileDir, os.ModePerm); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory", "details": err.Error()})
+		return
+	}
+
 	if err := os.WriteFile(filePath, buffer.Bytes(), 0644); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save Excel file", "details": err.Error()})
 		return
 	}
 
-	// c.JSON(http.StatusOK, results)
-	c.Header("Content-Disposition", "attachment; filename=results.xlsx")
-	c.Header("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	c.Data(http.StatusOK, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer.Bytes())
-	os.Remove(filePath)
+	c.JSON(http.StatusOK, gin.H{"file_path": filePath})
 }

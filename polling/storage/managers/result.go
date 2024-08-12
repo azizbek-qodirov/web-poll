@@ -28,7 +28,6 @@ func (m *ResultManager) CreateResult(ctx context.Context, req *pb.CreateResultRe
 }
 
 func (m *ResultManager) SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error) {
-
 	query := "INSERT INTO poll_answers (id, result_id, question_id, answer) VALUES ($1, $2, $3, $4)"
 	_, err := m.Conn.ExecContext(ctx, query, uuid.NewString(), req.ResultId, req.QuestionId, req.Answer)
 	if err != nil {
@@ -36,6 +35,7 @@ func (m *ResultManager) SavePollAnswer(ctx context.Context, req *pb.SavePollAnsw
 	}
 	return nil, nil
 }
+
 func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*pb.ExcelResultsRes, error) {
 	query := `
 		SELECT 
