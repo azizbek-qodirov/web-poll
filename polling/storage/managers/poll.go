@@ -18,10 +18,12 @@ func NewPollManager(conn *sql.DB) *PollManager {
 
 func (m *PollManager) Create(ctx context.Context, poll *pb.PollCreateReq) (*pb.Void, error) {
 	query := "SELECT insert_poll($1, $2)"
+	fmt.Println("options struct: ", poll.Options)
 	optionsJSON, err := json.Marshal(poll.Options)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal options to JSON: %w", err)
 	}
+	fmt.Println("options json:", optionsJSON)
 
 	_, err = m.Conn.ExecContext(ctx, query, poll.Title, optionsJSON)
 	if err != nil {
@@ -40,6 +42,7 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 		title   string
 		options string
 	)
+	fmt.Println("Options in getbyID: ", options)
 
 	err := row.Scan(&id, &pollNum, &title, &options)
 	if err != nil {
@@ -52,7 +55,7 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 	var optionList []*pb.Option
 	if options != "" {
 		if err := json.Unmarshal([]byte(options), &optionList); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal options: %w", err)
+			return nil, fmt.Errorf("failed to unmarshal options: %s", err.Error())
 		}
 	}
 

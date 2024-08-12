@@ -47,7 +47,7 @@ func NewRouter(PollConn *grpc.ClientConn) *gin.Engine {
 
 	poll := for_admin.Group("/poll")
 	{
-		poll.POST("/", h.CreatePoll, CORSMiddleware())
+		poll.POST("/", h.CreatePoll)
 		poll.PUT("/", h.UpdatePoll)
 		poll.DELETE("/:id", h.DeletePoll)
 		poll.GET("/:id", h.GetPollByID)
