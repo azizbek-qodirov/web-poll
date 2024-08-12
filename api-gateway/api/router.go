@@ -25,7 +25,7 @@ func NewRouter(PollConn *grpc.ClientConn) *gin.Engine {
 	h := handlers.NewHandler(PollConn)
 	wd, _ := os.Getwd()
 	filesDir := filepath.Join(wd, "files")
-	router.Static("/files", filesDir)
+	router.Static("./files", filesDir)
 
 	router.Use(CORSMiddleware())
 

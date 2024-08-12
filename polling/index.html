@@ -9,10 +9,10 @@
     <script>
         document.getElementById("generateButton").addEventListener("click", async function () {
             try {
-                const response = await fetch("http://15.237.118.112:8080/files", {
+                const response = await fetch("http://15.237.118.112:8080/files/", {
                     method: "GET",
                     headers: {
-                        "Authorization": "" // Include your token if needed
+                        "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InFvZGlyb3Zheml6YmVrMjQ5QGdtYWlsLmNvbSIsImV4cCI6MTcyMzUzNTA1MCwiaWF0IjoxNzIzNDQ4NjUwLCJyb2xlIjoiYWRtaW4iLCJ1c2VyX2lkIjoiYTFkZjk4NWEtZTU3NS00OTAzLTkzYzEtYTNlMTBhOTAwY2Q5In0.0lL0DLz80zxtkpQkulON_B8QweqYvhmbODgjUz-0jSM" // Include your token if needed
                     }
                 });
 
