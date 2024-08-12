@@ -30,7 +30,7 @@ func toAlphaString(n int) string {
 // @Tags results
 // @Accept json
 // @Produce json
-// @Success 200 {object} map[string]string "File path"
+// @Success 200 {object} map[string]string "File URL"
 // @Failure 404 {object} string "Poll not found"
 // @Failure 500 {object} string "Server error"
 // @Router /results [GET]
@@ -116,7 +116,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 	}
 
 	// Define file path in /files directory
-	fileDir := "/files"
+	fileDir := "./files"
 	fileName := "results.xlsx"
 	filePath := filepath.Join(fileDir, fileName)
 
@@ -132,17 +132,8 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 		return
 	}
 
-	// Return full file path in response
-	absFilePath, err := filepath.Abs(filePath)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get absolute file path", "details": err.Error()})
-		return
-	}
+	// Construct the file URL
+	fileURL := fmt.Sprintf("http://%s/files/%s", c.Request.Host, fileName)
 
-	c.JSON(http.StatusOK, gin.H{"abs_file_path": absFilePath})
-
-	// Optionally remove the file after returning the path (uncomment if needed)
-	// if err := os.Remove(absFilePath); err != nil {
-	// 	fmt.Printf("Warning: Failed to remove file %s: %v\n", absFilePath, err)
-	// }
+	c.JSON(http.StatusOK, gin.H{"file_url": fileURL})
 }

@@ -18,12 +18,11 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    const filePath = data.abs_file_path;
-                    // const filePath = "/files/results.xlsx"
+                    const fileURL = data.file_url;
 
                     // Trigger the download
                     const a = document.createElement('a');
-                    a.href = "http://15.237.118.112:8080" + filePath; // Construct the full URL
+                    a.href = fileURL;
                     a.download = 'results.xlsx'; // Set the file name
                     document.body.appendChild(a);
                     a.click();
@@ -38,3 +37,4 @@
     </script>
 </body>
 </html>
+
