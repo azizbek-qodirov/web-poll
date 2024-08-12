@@ -114,17 +114,20 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to write Excel file", "details": err.Error()})
 		return
 	}
-
+	dst, _ := os.Getwd()
+	fileDir := "/files"
+	if _, err := os.Stat(dst + fileDir); os.IsNotExist(err) {
+		os.Mkdir(dst+fileDir, os.ModePerm)
+	}
 	// Define file path in /files directory
-	fileDir := "./files"
 	fileName := "results.xlsx"
 	filePath := filepath.Join(fileDir, fileName)
 
-	// Create /files directory if it doesn't exist
-	if err := os.MkdirAll(fileDir, os.ModePerm); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory", "details": err.Error()})
-		return
-	}
+	// // Create /files directory if it doesn't exist
+	// if err := os.MkdirAll(fileDir, os.ModePerm); err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory", "details": err.Error()})
+	// 	return
+	// }
 
 	// Write buffer to file
 	if err := os.WriteFile(filePath, buffer.Bytes(), 0644); err != nil {
