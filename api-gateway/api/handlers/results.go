@@ -139,7 +139,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"file_path": absFilePath})
+	c.JSON(http.StatusOK, gin.H{"abs_file_path": absFilePath})
 
 	// Optionally remove the file after returning the path (uncomment if needed)
 	// if err := os.Remove(absFilePath); err != nil {
