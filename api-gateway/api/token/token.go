@@ -38,7 +38,7 @@ func GenerateJWTToken(userID string, email string, role string) *Tokens {
 	rftClaims["email"] = email
 	rftClaims["role"] = role
 	rftClaims["iat"] = time.Now().Unix()
-	rftClaims["exp"] = time.Now().Add(24 * time.Hour).Unix() // Refresh token expires in 24 hours
+	rftClaims["exp"] = time.Now().Add(72 * time.Hour).Unix() // Refresh token expires in 24 hours
 	refresh, err := refreshToken.SignedString([]byte(signingKey))
 	if err != nil {
 		log.Fatal("error while generating refresh token : ", err)
