@@ -24,9 +24,11 @@ import (
 func NewRouter(PollConn *grpc.ClientConn) *gin.Engine {
 	router := gin.Default()
 	h := handlers.NewHandler(PollConn)
+
 	wd, _ := os.Getwd()
-	filesDir := filepath.Join(wd, "files/")
-	router.Static("/files/", filesDir)
+	filesDir := filepath.Join(wd, "files")
+	router.Static("/files", filesDir)
+
 	fmt.Println(wd)
 	fmt.Println(filesDir)
 
