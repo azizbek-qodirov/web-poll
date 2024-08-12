@@ -815,9 +815,12 @@ const docTemplate = `{
                 "summary": "Get results in excel file",
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "File path",
                         "schema": {
-                            "type": "file"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
                     "404": {

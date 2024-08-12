@@ -32,7 +32,7 @@ func toAlphaString(n int) string {
 // @Produce json
 // @Success 200 {object} map[string]string "File path"
 // @Failure 404 {object} string "Poll not found"
-// @Failure 500 {object} string "Server error"
+// @Failure 500 {object} string "Server error" 
 // @Router /results [GET]
 // @Security BearerAuth
 func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {

@@ -688,9 +688,11 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: File path
           schema:
-            type: file
+            additionalProperties:
+              type: string
+            type: object
         "404":
           description: Poll not found
           schema:
