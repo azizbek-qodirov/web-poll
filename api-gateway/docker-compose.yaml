@@ -8,6 +8,8 @@ services:
       - "8080:8080"
     networks:
       - mynetwork
+    volumes:
+      - files_volume:/files
 
   redis:
     image: redis:latest
@@ -21,7 +23,6 @@ networks:
   mynetwork:
     external: true
     name: global-net
-    
 
 volumes:
-  db:
+  files_volume:
