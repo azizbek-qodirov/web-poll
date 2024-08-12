@@ -86,12 +86,6 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 	var options, title, pollId string
 	var optionList []*pb.Option
 
-	if options != "" {
-		if err := json.Unmarshal([]byte(options), &optionList); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal options: %s", err.Error())
-		}
-	}
-
 	err = m.Conn.QueryRowContext(ctx, pollQuery, req.PollId).Scan(&pollId, &pollNum, &title, &options)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -101,6 +95,12 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 			}, nil
 		}
 		return nil, fmt.Errorf("failed to get poll details: %w", err)
+	}
+
+	if options != "" {
+		if err := json.Unmarshal([]byte(options), &optionList); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal options: %s", err.Error())
+		}
 	}
 
 	poll.Id = pollId
