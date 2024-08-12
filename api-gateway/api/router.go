@@ -2,6 +2,8 @@ package api
 
 import (
 	"net/http"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
@@ -21,8 +23,12 @@ import (
 func NewRouter(PollConn *grpc.ClientConn) *gin.Engine {
 	router := gin.Default()
 	h := handlers.NewHandler(PollConn)
+	wd, _ := os.Getwd()
+	filesDir := filepath.Join(wd, "files")
+	router.Static("/files", filesDir)
 
 	router.Use(CORSMiddleware())
+
 	router.GET("/api/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// #################### AUTH SERVICE ######################### //
