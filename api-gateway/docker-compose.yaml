@@ -9,7 +9,7 @@ services:
     networks:
       - mynetwork
     volumes:
-      - files_volume:/files
+      - ./files:/files
 
   redis:
     image: redis:latest
