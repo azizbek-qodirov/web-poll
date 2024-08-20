@@ -9,7 +9,10 @@ import (
 
 	pb "auth-service/genprotos"
 
+	m "auth-service/drivers"
+
 	"github.com/gin-gonic/gin"
+	"github.com/minio/minio-go/v7"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -36,6 +39,11 @@ func toAlphaString(n int) string {
 // @Router /results [GET]
 // @Security BearerAuth
 func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
+	minioClient, err := m.MinIOConnect()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't connect to minio", "details": err.Error()})
+	}
+
 	results, err := h.Result.GetResultsInExcel(c, nil)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -123,11 +131,11 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 	fileName := "results.xlsx"
 	filePath := filepath.Join(fileDir, fileName)
 
-	// // Create /files directory if it doesn't exist
-	// if err := os.MkdirAll(fileDir, os.ModePerm); err != nil {
-	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory", "details": err.Error()})
-	// 	return
-	// }
+	// Create /files directory if it doesn't exist
+	if err := os.MkdirAll(fileDir, os.ModePerm); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory", "details": err.Error()})
+		return
+	}
 
 	// Write buffer to file
 	if err := os.WriteFile(filePath, buffer.Bytes(), 0644); err != nil {
@@ -135,8 +143,12 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 		return
 	}
 
-	// Construct the file URL
-	fileURL := fmt.Sprintf("http://%s/files/%s", c.Request.Host, fileName)
+	info, err := minioClient.FPutObject(c, "another-bucket", fileName, filePath, minio.PutObjectOptions{ContentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to put object into bucket", "details": err.Error()})
+		return
+	}
+	fileURL := fmt.Sprintf("http://%s/browser/%s/%s", "15.237.118.112:9001", info.Bucket, info.Key)
 
 	c.JSON(http.StatusOK, gin.H{"file_url": fileURL})
 }
