@@ -24,7 +24,7 @@ func (m *ResultManager) CreateResult(ctx context.Context, req *pb.CreateResultRe
 	if err != nil {
 		return nil, err
 	}
-	return &pb.CreateResultRes{ResultId: id}, nil
+	return &pb.CreateResultRes{ResultId: id, Feed: ""}, nil
 }
 
 func (m *ResultManager) SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error) {
@@ -108,4 +108,23 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 	}
 
 	return &pb.ExcelResultsRes{Results: results}, nil
+}
+
+func (m *ResultManager) GetByIDRes(ctx context.Context, req *pb.ByID) (*pb.ByIDResponse, error) {
+	query := "SELECT num as question_num, answer FROM question_answers WHERE result_id = $1"
+	rows, err := m.Conn.Query(query, req.Id)
+	var res pb.ByIDResponse
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var questionNum, answer int32
+		err := rows.Scan(&questionNum, &answer)
+		if err != nil {
+			return nil, err
+		}
+		res.Answers = append(res.Answers, &pb.IncomingAnswer{QuestionNum: questionNum, AnswerPoint: answer})
+	}
+	return &res, nil
 }

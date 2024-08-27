@@ -11,6 +11,7 @@ service ResultService {
     rpc CreateResult(CreateResultReq) returns (CreateResultRes);
     rpc SavePollAnswer(SavePollAnswerReq) returns (Void);
     rpc GetResultsInExcel(Void) returns (ExcelResultsRes);
+    rpc GetPollResults(ByID) returns (ByIDResponse);
 }
 
 message CreateResultReq {
@@ -20,6 +21,8 @@ message CreateResultReq {
 
 message CreateResultRes {
     string result_id = 1;
+    string feed = 2;
+
 }
 
 message SavePollAnswerReq {
@@ -51,4 +54,8 @@ message ResultRes {
     UserExcelResp user = 1;
     int32 poll_num = 2;
     repeated IncomingAnswer answers = 3;
+}
+
+message ByIDResponse {
+    repeated IncomingAnswer answers = 1;
 }

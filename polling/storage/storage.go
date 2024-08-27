@@ -41,4 +41,5 @@ type ResultI interface {
 	CreateResult(ctx context.Context, req *pb.CreateResultReq) (*pb.CreateResultRes, error)
 	SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error)
 	GetResultsInExcel(ctx context.Context, req *pb.Void) (*pb.ExcelResultsRes, error)
+	GetByIDRes(ctx context.Context, req *pb.ByID) (*pb.ByIDResponse, error)
 }

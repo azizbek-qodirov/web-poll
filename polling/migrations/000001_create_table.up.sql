@@ -27,7 +27,8 @@ CREATE TABLE IF NOT EXISTS polls (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     poll_num INT,
     title VARCHAR(255) NOT NULL,
-    options JSONB NOT NULL
+    options JSONB NOT NULL,
+    feedbacks JSONB NOT NULL
 );
 
 -- Create questions table

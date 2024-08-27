@@ -17,15 +17,19 @@ func NewPollManager(conn *sql.DB) *PollManager {
 }
 
 func (m *PollManager) Create(ctx context.Context, poll *pb.PollCreateReq) (*pb.Void, error) {
-	query := "SELECT insert_poll($1, $2)"
-	fmt.Println("options struct: ", poll.Options)
+	query := "SELECT insert_poll($1, $2, $3)"
+	// fmt.Println("options struct: ", poll.Options)
 	optionsJSON, err := json.Marshal(poll.Options)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal options to JSON: %w", err)
 	}
-	fmt.Println("options json:", optionsJSON)
+	// fmt.Println("options json:", optionsJSON)
+	feedbackJSON, err := json.Marshal(poll.Feedback)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal feedback to JSON: %w", err)
+	}
 
-	_, err = m.Conn.ExecContext(ctx, query, poll.Title, optionsJSON)
+	_, err = m.Conn.ExecContext(ctx, query, poll.Title, optionsJSON, feedbackJSON)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create poll: %w", err)
 	}

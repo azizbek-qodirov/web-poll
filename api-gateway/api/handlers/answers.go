@@ -35,7 +35,7 @@ func (h *HTTPHandler) SendAnswers(c *gin.Context) {
 		return
 	}
 	for _, i := range req.Answers {
-		_, err := h.Result.SavePollAnswer(c, &pb.SavePollAnswerReq{ResultId: id.ResultId, QuestionId: i.QuestionId, Answer: i.AnswerPoint})
+		_, err := h.Result.SavePollAnswer(c, &pb.SavePollAnswerReq{ResultId: id.ResultId, QuestionId: i.QuestionNum, Answer: i.AnswerPoint})
 		if err != nil {
 			c.JSON(400, gin.H{"error": "Couldn't save answer", "details": err.Error()})
 			return

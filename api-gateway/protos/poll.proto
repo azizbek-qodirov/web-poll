@@ -18,6 +18,13 @@ service PollService {
 message PollCreateReq {
     string title = 1;
     repeated Option options = 2;
+    repeated Feedback feedback = 3; 
+}
+
+message Feedback {
+    int32 from = 1;  
+    int32 to = 2;
+    string text = 3;
 }
 
 message Option {
@@ -35,6 +42,7 @@ message PollGetByIDRes {
     int32 poll_num = 2;
     string title = 3;
     repeated Option options = 4;
+    repeated Feedback feedback = 5;
 }
 
 message PollGetAllReq {
