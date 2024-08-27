@@ -29,17 +29,26 @@ func (h *HTTPHandler) SendAnswers(c *gin.Context) {
 		UserId: req.UserId,
 		PollId: req.PollId,
 	}
+
 	id, err := h.Result.CreateResult(c, &poll)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't create result", "details": err.Error()})
 		return
 	}
+
 	for _, i := range req.Answers {
-		_, err := h.Result.SavePollAnswer(c, &pb.SavePollAnswerReq{ResultId: id.ResultId, QuestionId: i.QuestionNum, Answer: i.AnswerPoint})
+		_, err := h.Result.SavePollAnswer(c, &pb.SavePollAnswerReq{ResultId: id.ResultId, QuestionId: i.QuestionId, Answer: i.AnswerPoint})
 		if err != nil {
 			c.JSON(400, gin.H{"error": "Couldn't save answer", "details": err.Error()})
 			return
 		}
 	}
-	c.JSON(201, gin.H{"message": "Successfully posted"})
+
+	feedResult, err := h.Result.GetPollResults(c, &pb.ByIDs{ResultId: id.ResultId, PollId: poll.PollId})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Couldn't get results", "details": err.Error()})
+		return
+	}
+
+	c.JSON(201, gin.H{"message": "Successfully posted", "id": id.ResultId, "feedback": feedResult.Feed})
 }

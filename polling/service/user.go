@@ -38,3 +38,7 @@ func (s *UserService) IsEmailExists(ctx context.Context, req *pb.IsEmailExistsRe
 func (s *UserService) GetByID(ctx context.Context, req *pb.GetProfileByIdReq) (*pb.GetProfileByIdResp, error) {
 	return s.storage.User().GetByID(ctx, req)
 }
+
+func (s *UserService) GetByEmail(ctx context.Context, req *pb.ByEmail) (*pb.GetProfileByIdResp, error) {
+	return s.storage.User().GetByEmail(ctx, req)
+}

@@ -165,3 +165,47 @@ func (h *HTTPHandler) RecoverPassword(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Password successfully updated"})
 }
+
+// SendCodeAgain godoc
+// @Summary Sends code again if user didn't recieve the code
+// @Description Sends a confirmation code to email recovery password again
+// @Tags password-recovery
+// @Accept json
+// @Produce json
+// @Param credentials body pb.ByEmail true "User login credentials"
+// @Success 200 {object} string ""
+// @Failure 401 {object} string "Unauthorized"
+// @Failure 404 {object} string "Page not found"
+// @Failure 500 {object} string "Server error"
+// @Security BearerAuth
+// @Router /send-code [POST]
+func (h *HTTPHandler) SendCodeAgain(c *gin.Context) {
+	var req pb.ByEmail
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"Invalid request payload": err.Error()})
+		return
+	}
+
+	if !config.IsValidEmail(req.Email) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid email format"})
+		return
+	}
+
+	user, err := h.User.GetByEmail(c, &pb.ByEmail{Email: req.Email})
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized", "details": err.Error()})
+		return
+	}
+
+	if user == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		return
+	}
+	err = h.SendConfirmationCode(user.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code to email", "err": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Confirmation code sent to your email. Please use your code within 3 minutes."})
+}

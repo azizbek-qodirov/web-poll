@@ -815,7 +815,7 @@ const docTemplate = `{
                 "summary": "Get results in excel file",
                 "responses": {
                     "200": {
-                        "description": "File path",
+                        "description": "File URL",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -891,6 +891,20 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "genprotos.Feedback": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "integer"
+                }
+            }
+        },
         "genprotos.IncomingAnswer": {
             "type": "object",
             "properties": {
@@ -933,6 +947,12 @@ const docTemplate = `{
         "genprotos.PollCreateReq": {
             "type": "object",
             "properties": {
+                "feedbacks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.Feedback"
+                    }
+                },
                 "options": {
                     "type": "array",
                     "items": {
@@ -958,6 +978,12 @@ const docTemplate = `{
         "genprotos.PollGetByIDRes": {
             "type": "object",
             "properties": {
+                "feedback": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/genprotos.Feedback"
+                    }
+                },
                 "id": {
                     "type": "string"
                 },

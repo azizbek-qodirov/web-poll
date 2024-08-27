@@ -19,28 +19,17 @@ migrate_file:
 swag-gen:
 	~/go/bin/swag init -g ./api/router.go -o api/docs force 1
 
+ps:
+	docker ps -a
 
+pg:
+	docker exec -it $(c) psql -U postgres -d polling_db
 
-# doc-continer-all-del:
-# 	docker rm $(docker ps -aq)
-# 	docker rmi $(docker ps images)
+down:
+	docker compose down
+	
+up:
+	docker compose up
 
-# doc-network-all:
-# 	docker network ls
-
-
-# doc-query:
-#   docker rm ...
-#   docker rmi -f ...
-#   docker container ps
-# 	docker ps
-# 	docker image rmi auth_service
-# 	docker container ls
-# 	docker container prune
-# 	docker container rm libCont
-# 	docker build -t lib_service .
-# 	docker network ls
-# 	docker images
-# 	docker exec -it post-cont psql -U postgres -d library_db
-# 	docker system prune -af
-#  	docker volume prune -af
+build:
+	docker compose up --build

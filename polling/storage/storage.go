@@ -19,6 +19,7 @@ type UserI interface {
 	UpdatePassword(ctx context.Context, req *pb.UpdatePasswordReq) (*pb.Void, error)
 	IsEmailExists(ctx context.Context, req *pb.IsEmailExistsReq) (*pb.IsEmailExistsResp, error)
 	GetByID(ctx context.Context, req *pb.GetProfileByIdReq) (*pb.GetProfileByIdResp, error)
+	GetByEmail(ctx context.Context, req *pb.ByEmail) (*pb.GetProfileByIdResp, error)
 }
 
 type PollI interface {
@@ -41,5 +42,5 @@ type ResultI interface {
 	CreateResult(ctx context.Context, req *pb.CreateResultReq) (*pb.CreateResultRes, error)
 	SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error)
 	GetResultsInExcel(ctx context.Context, req *pb.Void) (*pb.ExcelResultsRes, error)
-	GetByIDRes(ctx context.Context, req *pb.ByID) (*pb.ByIDResponse, error)
+	GetByIDRes(ctx context.Context, req *pb.ByIDs) (*pb.ByIDResponse, error)
 }

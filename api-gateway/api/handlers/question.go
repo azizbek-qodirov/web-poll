@@ -121,8 +121,8 @@ func (h *HTTPHandler) GetQuestionByID(c *gin.Context) {
 func (h *HTTPHandler) GetAllQuestions(c *gin.Context) {
 	poll_id := c.Param("poll_id")
 	fmt.Println("poll_id: ", poll_id)
-	req := pb.QuestionGetAllReq{PollId: poll_id}
-	
+	req := pb.QuestionGetAllReq{PollId: &poll_id}
+
 	res, err := h.Question.GetAll(c, &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})

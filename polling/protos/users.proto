@@ -13,6 +13,11 @@ service UserService {
     rpc UpdatePassword(UpdatePasswordReq) returns (Void);
     rpc IsEmailExists(IsEmailExistsReq) returns (IsEmailExistsResp);
     rpc GetByID(GetProfileByIdReq) returns (GetProfileByIdResp);
+    rpc GetByEmail(ByEmail) returns (GetProfileByIdResp);
+}
+
+message ByEmail {
+    string email = 1;
 }
 
 message RegisterReq {

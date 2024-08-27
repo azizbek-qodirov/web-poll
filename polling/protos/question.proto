@@ -16,19 +16,19 @@ service QuestionService {
 }
 
 message QuestionCreateReq {
-    string content = 3;
-    string poll_id = 4;
+    optional string content = 3;
+    optional string poll_id = 4;
 }
 
 message QuestionUpdateReq {
-    string id = 1;
-    string content = 2;
+    optional string id = 1;
+    optional string content = 2;
 }
 
 message QuestionGetByIDRes {
-    string id = 1; 
-    string content = 2;
-    string poll_id = 3;
+    optional string id = 1; 
+    optional string content = 2;
+    optional string poll_id = 3;
 }
 
 message QuestionGetAllRes {
@@ -37,12 +37,12 @@ message QuestionGetAllRes {
 }
 
 message QuestionGetAllReq {
-    string poll_id = 1;
+    optional string poll_id = 1;
 }
 
 message Question {
-    string id = 1; 
-    int32 num = 2;
-    string content = 3;
-    string poll_id = 4;
+    optional string id = 1; 
+    optional int32 num = 2;
+    optional string content = 3;
+    optional string poll_id = 4;
 }

@@ -81,3 +81,13 @@ func (m *UserManager) GetByID(context context.Context, id *pb.GetProfileByIdReq)
 	}
 	return user, nil
 }
+
+func (m *UserManager) GetByEmail(context context.Context, id *pb.ByEmail) (*pb.GetProfileByIdResp, error) {
+	query := "SELECT id, email, role FROM users WHERE email = $1"
+	user := &pb.GetProfileByIdResp{}
+	err := m.Conn.QueryRow(query, id.Email).Scan(&user.Id, &user, &user.Email, &user.Role)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}

@@ -17,32 +17,7 @@ func NewResultService(storage st.StorageI) *ResultService {
 }
 
 func (s *ResultService) CreateResult(ctx context.Context, req *pb.CreateResultReq) (*pb.CreateResultRes, error) {
-	resAnswer, err := s.storage.Result().GetByIDRes(ctx, &pb.ByID{Id: req.PollId})
-	if err != nil {
-		return nil, err
-	}
-	var total int32
-	var feed string
-	for _, v := range resAnswer.Answers {
-		total += v.AnswerPoint
-	}
-	poll, err := s.storage.Poll().GetByID(ctx, &pb.ByID{Id: req.PollId})
-	if err != nil {
-		return nil, err
-	}
-
-	for _, v := range poll.Feedback {
-		if total >= v.From && total < v.To {
-			feed = v.Text
-			break
-		}
-	}
-	res, err := s.storage.Result().CreateResult(ctx, req)
-	if err != nil {
-		return nil, err
-	}
-	res.Feed = feed
-	return res, nil
+	return s.storage.Result().CreateResult(ctx, req)
 }
 
 func (s *ResultService) SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error) {
@@ -51,4 +26,57 @@ func (s *ResultService) SavePollAnswer(ctx context.Context, req *pb.SavePollAnsw
 
 func (s *ResultService) GetResultsInExcel(ctx context.Context, req *pb.Void) (*pb.ExcelResultsRes, error) {
 	return s.storage.Result().GetResultsInExcel(ctx, req)
+}
+
+func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.ByIDResponse, error) {
+	resAnswer, err := s.storage.Result().GetByIDRes(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	var extrovert, nevrotizm, total int32
+	var feed string
+	poll, err := s.storage.Poll().GetByID(ctx, &pb.ByID{Id: *req.PollId})
+	if err != nil {
+		return nil, err
+	}
+	if *poll.PollNum == 1 {
+		for _, v := range resAnswer.Answers {
+			switch *v.Num {
+			case 1, 3, 8, 10, 13, 17, 22, 25, 27, 39, 44, 46, 49, 53, 56:
+				extrovert += 1
+			case 2, 4, 7, 9, 11, 14, 16, 19, 21, 23, 26, 28, 31, 33, 35, 38, 40, 43, 45, 47, 50, 52, 55, 57:
+				nevrotizm += 1
+			default:
+				continue
+			}
+		}
+
+		if extrovert >= 12 {
+			feed = "Siz ekstravert"
+		} else {
+			feed = "Siz introvert"
+		}
+
+		if nevrotizm > 12 && extrovert < 12 {
+			feed += " va nevrotizm"
+		} else if nevrotizm > 12 {
+			feed += " va nevrotizm"
+		}
+		feed += " turiga mansubsiz"
+
+	} else {
+		for _, v := range resAnswer.Answers {
+			total += *v.AnswerPoint
+		}
+
+		for _, v := range poll.Feedback {
+			if total >= *v.From && total < *v.To {
+				feed = *v.Text
+				break
+			}
+		}
+	}
+
+	*resAnswer.Feed = feed
+	return resAnswer, nil
 }

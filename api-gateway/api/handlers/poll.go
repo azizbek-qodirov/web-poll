@@ -26,6 +26,32 @@ func (h *HTTPHandler) CreatePoll(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, "Invalid request payload: "+err.Error())
 		return
 	}
+
+	for _, feedback := range req.Feedbacks {
+		if feedback.From == nil {
+			defaultFrom := int32(0)
+			feedback.From = &defaultFrom
+		}
+		if feedback.To == nil {
+			defaultTo := int32(0)
+			feedback.To = &defaultTo
+		}
+		if feedback.Text == nil {
+			defaultText := ""
+			feedback.Text = &defaultText
+		}
+	}
+
+	for _, option := range req.Options {
+		if option.Variant == nil {
+			defaultVariant := ""
+			option.Variant = &defaultVariant
+		}
+		if option.Ball == nil {
+			defaultBall := int32(0)
+			option.Ball = &defaultBall
+		}
+	}
 	_, err := h.Poll.Create(context.Background(), &req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, "Server error: "+err.Error())

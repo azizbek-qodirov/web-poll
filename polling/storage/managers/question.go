@@ -103,9 +103,9 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 		}
 	}
 
-	poll.Id = pollId
-	poll.PollNum = pollNum
-	poll.Title = title
+	poll.Id = &pollId
+	poll.PollNum = &pollNum
+	poll.Title = &title
 	poll.Options = optionList
 
 	return &pb.QuestionGetAllRes{

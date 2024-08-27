@@ -10,13 +10,48 @@
         "working_experience": 2
     },
     {
-        "options": {
-            "1": "Hech qachon",
-            "2": "Odatda",
-            "3": "Har doim"
-        },
-        "poll_num": 1,
-        "title": "Psixologik savol"
+        "feedbacks": [
+            {
+                "from": 0,
+                "text": "0-10 ball to'pladingiz",
+                "to": 10
+            },
+            {
+                "from": 11,
+                "text": "11-20 ball to'pladingiz",
+                "to": 20
+            },
+            {
+                "from": 21,
+                "text": "21-30 ball to'pladingiz",
+                "to": 30
+            },
+            {
+                "from": 31,
+                "text": "31-40 ball to'pladingiz",
+                "to": 40
+            },
+            {
+                "from": 41,
+                "text": "41-50 ball to'pladingiz",
+                "to": 50
+            }
+        ],
+        "options": [
+            {
+                "ball": 1,
+                "variant": "Hech qachon"
+            },
+            {
+                "ball": 2,
+                "variant": "Odatda"
+            },
+            {
+                "ball": 3,
+                "variant": "Har doim"
+            }
+        ],
+        "title": "20-so'rovnoma"
     },
     {
         "content": "Turli topshiriqlarni bajarishda muvaffaqiyat qozonganman, lekin, ularni bajarishdan avval buni qila olmayman degan qo‘rquv bo‘lar edi",
@@ -31,7 +66,6 @@
                 {
                     "num": 1,
                     "answer_point": 1
-                    
                 },
                 {
                     "num": 2,
@@ -74,3 +108,89 @@
     ]
 ]
 
+{
+    "answers": [
+        {
+            "answer_point": 1,
+            "question_id": "9bb37b6c-3b1d-488b-8e1c-0df93903ec4a"
+        },
+        {
+            "answer_point": 2,
+            "question_id": "09976236-c8e2-4407-a67a-dd75a8242975"
+        },
+        {
+            "answer_point": 3,
+            "question_id": "fbd59b70-136d-4d31-914c-2d51bc6bd251"
+        },
+        {
+            "answer_point": 1,
+            "question_id": "af5d5011-6292-4be4-960f-c98932a76669"
+        },
+        {
+            "answer_point": 2,
+            "question_id": "1fd35579-d95a-4b95-8e77-227e5547c3b3"
+        },
+        {
+            "answer_point": 3,
+            "question_id": "7beeeb83-8ede-4339-ae69-1c1843f45452"
+        },
+        {
+            "answer_point": 1,
+            "question_id": "5b85fd6e-71f3-41e7-b719-93ef86239758"
+        },
+        {
+            "answer_point": 2,
+            "question_id": "d07fafb0-b677-4149-be2f-c996d05e3df0"
+        },
+        {
+            "answer_point": 3,
+            "question_id": "1cd76c90-ce85-4184-8be1-6c0559a5fda4"
+        },
+        {
+            "answer_point": 1,
+            "question_id": "17758ccb-badb-4c59-9c7f-e32604a5a719"
+        },
+        {
+            "answer_point": 2,
+            "question_id": "1a9032c2-e205-45a9-9594-895d30573a4c"
+        },
+        {
+            "answer_point": 3,
+            "question_id": "6e4ac629-c916-4db5-b330-40fd171ae89d"
+        },
+        {
+            "answer_point": 1,
+            "question_id": "721a8d52-5586-4b9c-bb69-a5ebc3d5cac0"
+        },
+        {
+            "answer_point": 2,
+            "question_id": "9b18a8e4-5748-4533-9774-97d7aedd87e5"
+        },
+        {
+            "answer_point": 3,
+            "question_id": "1c632f81-41d7-4499-a1c0-6b8f463df62f"
+        },
+        {
+            "answer_point": 1,
+            "question_id": "b5e0960f-fc06-4a49-b959-3b1f84950dba"
+        },
+        {
+            "answer_point": 2,
+            "question_id": "6e4ae909-93a1-4655-aa47-2d8ae111046b"
+        },
+        {
+            "answer_point": 3,
+            "question_id": "4a559a6b-7635-4d66-aa35-96e2b0f8f09c"
+        },
+        {
+            "answer_point": 1,
+            "question_id": "7a4fd43f-25c0-40ba-997d-776d6a3edee4"
+        },
+        {
+            "answer_point": 2,
+            "question_id": "e0d4a2ae-cfb9-4c50-9417-cfdff5a79688"
+        }
+    ],
+    "poll_id": "89d025d1-8639-47fa-9d3a-8710646bea89",
+    "user_id": "3e517a7f-674d-409c-9777-53eb85702509"
+}

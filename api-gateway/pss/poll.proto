@@ -52,3 +52,5 @@ message PollGetAllReq {
 message PollGetAllRes {
     repeated PollGetByIDRes poll = 1;
 }
+
+

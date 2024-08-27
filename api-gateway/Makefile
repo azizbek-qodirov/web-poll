@@ -19,3 +19,18 @@ swag-gen:
 
 proto-gen:
 	protoc --go_out=./ --go-grpc_out=./ protos/*.proto
+
+ps:
+	docker ps -a
+
+pg:
+	docker exec -it $(c) psql -U postgres -d polling_db
+
+down:
+	docker compose down
+	
+up:
+	docker compose up
+
+build:
+	docker compose up --build

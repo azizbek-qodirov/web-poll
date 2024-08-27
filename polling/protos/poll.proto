@@ -16,41 +16,39 @@ service PollService {
 }
 
 message PollCreateReq {
-    string title = 1;
+    optional string title = 1;
     repeated Option options = 2;
-    repeated Feedback feedback = 3; 
+    repeated Feedback feedbacks = 3; 
 }
 
 message Feedback {
-    int32 from = 1;  
-    int32 to = 2;
-    string text = 3;
+    optional int32 from = 1;  
+    optional int32 to = 2;
+    optional string text = 3;
 }
 
 message Option {
-    string variant = 1;
-    int32 ball = 2;
+    optional string variant = 1;
+    optional int32 ball = 2;
 }
 
 message PollUpdateReq {
-    string id = 1;
-    string title = 3;
+    optional string id = 1;
+    optional string title = 3;
 }
 
 message PollGetByIDRes {
-    string id = 1;
-    int32 poll_num = 2;
-    string title = 3;
+    optional string id = 1;
+    optional int32 poll_num = 2;
+    optional string title = 3;
     repeated Option options = 4;
     repeated Feedback feedback = 5;
 }
 
 message PollGetAllReq {
-    string user_id = 1;
+    optional string user_id = 1;
 }
 
 message PollGetAllRes {
     repeated PollGetByIDRes poll = 1;
 }
-
-

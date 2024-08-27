@@ -24,7 +24,7 @@ func (m *ResultManager) CreateResult(ctx context.Context, req *pb.CreateResultRe
 	if err != nil {
 		return nil, err
 	}
-	return &pb.CreateResultRes{ResultId: id, Feed: ""}, nil
+	return &pb.CreateResultRes{ResultId: &id}, nil
 }
 
 func (m *ResultManager) SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error) {
@@ -41,7 +41,7 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 		SELECT 
 			u.name, u.surname, u.gender, u.email, u.phone_number, u.working_experience, u.level_type,
 			p.poll_num,
-			q.num AS question_num, pa.answer
+			q.num AS question_num, q.id, pa.answer
 		FROM 
 			results r
 		JOIN 
@@ -64,10 +64,10 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 
 	resultsMap := make(map[string]*pb.ResultRes)
 	for rows.Next() {
-		var name, surname, gender, email, phoneNumber, level_type string
+		var name, surname, gender, email, phoneNumber, level_type, questionId string
 		var workingExperience, pollNum, questionNum, answer int32
 
-		err := rows.Scan(&name, &surname, &gender, &email, &phoneNumber, &workingExperience, &level_type, &pollNum, &questionNum, &answer)
+		err := rows.Scan(&name, &surname, &gender, &email, &phoneNumber, &workingExperience, &level_type, &pollNum, &questionNum, &questionId, &answer)
 		if err != nil {
 			return nil, err
 		}
@@ -85,17 +85,17 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 		resultKey := name + surname + string(pollNum)
 		if result, exists := resultsMap[resultKey]; exists {
 			result.Answers = append(result.Answers, &pb.IncomingAnswer{
-				QuestionNum: questionNum,
-				AnswerPoint: answer,
+				QuestionId:  &questionId,
+				AnswerPoint: &answer,
 			})
 		} else {
 			resultsMap[resultKey] = &pb.ResultRes{
 				User:    user,
-				PollNum: pollNum,
+				PollNum: &pollNum,
 				Answers: []*pb.IncomingAnswer{
 					{
-						QuestionNum: questionNum,
-						AnswerPoint: answer,
+						QuestionId:  &questionId,
+						AnswerPoint: &answer,
 					},
 				},
 			}
@@ -110,21 +110,22 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 	return &pb.ExcelResultsRes{Results: results}, nil
 }
 
-func (m *ResultManager) GetByIDRes(ctx context.Context, req *pb.ByID) (*pb.ByIDResponse, error) {
-	query := "SELECT num as question_num, answer FROM question_answers WHERE result_id = $1"
-	rows, err := m.Conn.Query(query, req.Id)
+func (m *ResultManager) GetByIDRes(ctx context.Context, req *pb.ByIDs) (*pb.ByIDResponse, error) {
+	query := "SELECT question_id, num, answer FROM poll_answers WHERE result_id = $1"
+	rows, err := m.Conn.Query(query, req.ResultId)
 	var res pb.ByIDResponse
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var questionNum, answer int32
-		err := rows.Scan(&questionNum, &answer)
+		var questionId string
+		var answer, num int32
+		err := rows.Scan(&questionId, &num, &answer)
 		if err != nil {
 			return nil, err
 		}
-		res.Answers = append(res.Answers, &pb.IncomingAnswer{QuestionNum: questionNum, AnswerPoint: answer})
+		res.Answers = append(res.Answers, &pb.IncomingAnswer{QuestionId: &questionId, AnswerPoint: &answer, Num: &num})
 	}
 	return &res, nil
 }

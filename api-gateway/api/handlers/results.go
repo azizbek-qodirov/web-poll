@@ -54,7 +54,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 
 	pollResults := make(map[int][]*pb.ResultRes)
 	for _, result := range results.Results {
-		pollResults[int(result.PollNum)] = append(pollResults[int(result.PollNum)], result)
+		pollResults[int(*result.PollNum)] = append(pollResults[int(*result.PollNum)], result)
 	}
 
 	for pollNum, pollRes := range pollResults {
@@ -102,7 +102,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 			totalPoints := 0
 			for _, answer := range result.Answers {
 				row = append(row, answer.AnswerPoint)
-				totalPoints += int(answer.AnswerPoint)
+				totalPoints += int(*answer.AnswerPoint)
 			}
 
 			row = append(row[:8], append([]interface{}{totalPoints}, row[8:]...)...)

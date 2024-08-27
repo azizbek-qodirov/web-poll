@@ -1,4 +1,13 @@
 definitions:
+  genprotos.Feedback:
+    properties:
+      from:
+        type: integer
+      text:
+        type: string
+      to:
+        type: integer
+    type: object
   genprotos.IncomingAnswer:
     properties:
       answer_point:
@@ -26,6 +35,10 @@ definitions:
     type: object
   genprotos.PollCreateReq:
     properties:
+      feedbacks:
+        items:
+          $ref: '#/definitions/genprotos.Feedback'
+        type: array
       options:
         items:
           $ref: '#/definitions/genprotos.Option'
@@ -42,6 +55,10 @@ definitions:
     type: object
   genprotos.PollGetByIDRes:
     properties:
+      feedback:
+        items:
+          $ref: '#/definitions/genprotos.Feedback'
+        type: array
       id:
         type: string
       options:
@@ -688,7 +705,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: File path
+          description: File URL
           schema:
             additionalProperties:
               type: string

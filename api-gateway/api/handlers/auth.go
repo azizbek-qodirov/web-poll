@@ -51,6 +51,7 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 	hashedPassword, err := config.HashPassword(req.Password)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "err": err.Error()})
+		return
 	}
 
 	req.Password = string(hashedPassword)
@@ -61,7 +62,8 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 	} else if req.Gender == "female" {
 		gender = 1
 	} else {
-		c.JSON(400, "Invalid gender format")
+		c.JSON(400, gin.H{"error": "Invalid gender format"})
+		return
 	}
 
 	_, err = h.User.Register(c,
@@ -73,7 +75,7 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 			Gender:            pb.GenderType(gender),
 			PhoneNumber:       req.PhoneNumber,
 			WorkingExperience: req.WorkingExperience,
-			LevelType:             req.LevelType,
+			LevelType:         req.LevelType,
 		})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "err": err.Error()})
