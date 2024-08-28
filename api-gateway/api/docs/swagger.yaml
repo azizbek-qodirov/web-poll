@@ -1,4 +1,9 @@
 definitions:
+  genprotos.ByEmail:
+    properties:
+      email:
+        type: string
+    type: object
   genprotos.Feedback:
     properties:
       from:
@@ -11,6 +16,8 @@ definitions:
   genprotos.IncomingAnswer:
     properties:
       answer_point:
+        type: integer
+      num:
         type: integer
       question_id:
         type: string
@@ -755,6 +762,42 @@ paths:
       summary: Handles results
       tags:
       - answer
+  /send-code:
+    post:
+      consumes:
+      - application/json
+      description: Sends a confirmation code to email recovery password again
+      parameters:
+      - description: User login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.ByEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "401":
+          description: Unauthorized
+          schema:
+            type: string
+        "404":
+          description: Page not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Sends code again if user didn't recieve the code
+      tags:
+      - password-recovery
 securityDefinitions:
   BearerAuth:
     in: header

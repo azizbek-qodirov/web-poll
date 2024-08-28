@@ -888,9 +888,74 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/send-code": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Sends a confirmation code to email recovery password again",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "password-recovery"
+                ],
+                "summary": "Sends code again if user didn't recieve the code",
+                "parameters": [
+                    {
+                        "description": "User login credentials",
+                        "name": "credentials",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/genprotos.ByEmail"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Page not found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "genprotos.ByEmail": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                }
+            }
+        },
         "genprotos.Feedback": {
             "type": "object",
             "properties": {
@@ -909,6 +974,9 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "answer_point": {
+                    "type": "integer"
+                },
+                "num": {
                     "type": "integer"
                 },
                 "question_id": {
