@@ -111,7 +111,12 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 }
 
 func (m *ResultManager) GetByIDRes(ctx context.Context, req *pb.ByIDs) (*pb.ByIDResponse, error) {
-	query := "SELECT question_id, num, answer FROM poll_answers WHERE result_id = $1"
+	query := `
+	SELECT pa.question_id, q.num, pa.answer 
+	FROM poll_answers pa
+	JOIN questions q ON pa.question_id = q.id
+	WHERE result_id = $1
+	`
 	rows, err := m.Conn.Query(query, req.ResultId)
 	var res pb.ByIDResponse
 	if err != nil {

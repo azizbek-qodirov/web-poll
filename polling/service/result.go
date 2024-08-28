@@ -77,6 +77,6 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 		}
 	}
 
-	*resAnswer.Feed = feed
+	resAnswer.Feed = &feed
 	return resAnswer, nil
 }
