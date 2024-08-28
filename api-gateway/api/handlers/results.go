@@ -59,7 +59,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 
 	for pollNum, pollRes := range pollResults {
 		sheetName := fmt.Sprintf("Poll %d", pollNum)
-		index, err := f.NewSheet(sheetName)
+		_, err := f.NewSheet(sheetName)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create sheet", "details": err.Error()})
 			return
@@ -96,13 +96,17 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 				result.User.PhoneNumber,
 				result.User.WorkingExperience,
 				result.User.LevelType,
-				fmt.Sprintf("%d - so'rovnoma", result.PollNum),
+				fmt.Sprintf("%d - so'rovnoma", *result.PollNum),
 			}
 
 			totalPoints := 0
 			for _, answer := range result.Answers {
-				row = append(row, answer.AnswerPoint)
-				totalPoints += int(*answer.AnswerPoint)
+				if answer.AnswerPoint != nil {
+					row = append(row, *answer.AnswerPoint)
+					totalPoints += int(*answer.AnswerPoint)
+				} else {
+					row = append(row, nil) // Handle the case where the pointer is nil
+				}
 			}
 
 			row = append(row[:8], append([]interface{}{totalPoints}, row[8:]...)...)
@@ -113,8 +117,6 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 			}
 			rowNum++
 		}
-
-		f.SetActiveSheet(index)
 	}
 
 	var buffer bytes.Buffer

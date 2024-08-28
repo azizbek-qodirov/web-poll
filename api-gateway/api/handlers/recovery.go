@@ -32,8 +32,8 @@ func (h *HTTPHandler) SendConfirmationCode(email string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", config.Load().SENDER_EMAIL)
 	m.SetHeader("To", email)
-	m.SetHeader("Subject", "Password Recovery Code")
-	m.SetBody("text/plain", fmt.Sprintf("Your password recovery code is: %d", code))
+	m.SetHeader("Subject", "Tasdiqlash kodi")
+	m.SetBody("text/plain", fmt.Sprintf("Sizning tasdiqlash kodingiz: %d", code))
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, config.Load().SENDER_EMAIL, config.Load().APP_PASSWORD)
 
@@ -178,7 +178,7 @@ func (h *HTTPHandler) RecoverPassword(c *gin.Context) {
 // @Failure 404 {object} string "Page not found"
 // @Failure 500 {object} string "Server error"
 // @Security BearerAuth
-// @Router /send-code [POST]
+// @Router /resverify [POST]
 func (h *HTTPHandler) SendCodeAgain(c *gin.Context) {
 	var req pb.ByEmail
 	if err := c.BindJSON(&req); err != nil {

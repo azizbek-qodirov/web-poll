@@ -39,7 +39,7 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 	}
 
 	if _, err := h.User.IsEmailExists(c, &pb.IsEmailExistsReq{Email: req.Email}); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Email already registered", "details": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Email already registered", "error": "email"})
 		return
 	}
 
@@ -62,7 +62,7 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 	} else if req.Gender == "female" {
 		gender = 1
 	} else {
-		c.JSON(400, gin.H{"error": "Invalid gender format"})
+		c.JSON(400, gin.H{"message": "Invalid gender format", "error": "gender"})
 		return
 	}
 
@@ -112,15 +112,15 @@ func (h *HTTPHandler) ConfirmRegistration(c *gin.Context) {
 
 	storedCode, err := rdb.Get(context.Background(), req.Email).Result()
 	if err == redis.Nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Verification code expired or email not found"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "Verification code expired or email not found", "error": "code"})
 		return
 	} else if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "This email not found in confirmation requests!"})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": "This email not found in confirmation requests!", "error": "email"})
 		return
 	}
 
 	if storedCode != req.Code {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Incorrect verification code"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Incorrect verification code", "error": "code"})
 		return
 	}
 
@@ -163,12 +163,12 @@ func (h *HTTPHandler) Login(c *gin.Context) {
 
 	user, err := h.User.Profile(c, &pb.GetProfileReq{Email: req.Email})
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "User registered with this email not found"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "User registered with this email not found", "error": "email"})
 		return
 	}
 
 	if !config.CheckPasswordHash(req.Password, user.Password) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid email or password"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid password", "error": "password"})
 		return
 	}
 
@@ -180,11 +180,6 @@ func (h *HTTPHandler) Login(c *gin.Context) {
 		}
 
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Your account is not verified. Please check your email for a confirmation link."})
-		return
-	}
-
-	if user.Role == "banned" {
-		c.JSON(http.StatusForbidden, gin.H{"error": "You are banned"})
 		return
 	}
 

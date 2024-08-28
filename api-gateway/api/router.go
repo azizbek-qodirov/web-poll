@@ -32,7 +32,7 @@ func NewRouter(PollConn *grpc.ClientConn) *gin.Engine {
 	router.POST("/login", h.Login)
 	router.POST("/forgot-password", h.ForgotPassword)
 	router.POST("/recover-password", h.RecoverPassword)
-	router.POST("")
+	router.POST("/resverify", h.SendCodeAgain)
 
 	protected := router.Group("/", middleware.JWTMiddleware())
 	protected.GET("/profile", h.Profile)
