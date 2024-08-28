@@ -59,6 +59,7 @@ func (m *QuestionManager) Delete(ctx context.Context, req *pb.ByID) (*pb.Void, e
 }
 
 func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq) (*pb.QuestionGetAllRes, error) {
+	// Savollarni olish uchun so'rov
 	questionQuery := "SELECT id, num, content, poll_id FROM questions WHERE poll_id = $1"
 	rows, err := m.Conn.QueryContext(ctx, questionQuery, req.PollId)
 	if err != nil {
@@ -80,11 +81,12 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 		return nil, fmt.Errorf("rows error: %w", err)
 	}
 
+	// Anketani olish uchun so'rov
 	pollQuery := "SELECT id, poll_num, title, options FROM polls WHERE id = $1"
 	var poll pb.PollGetByIDRes
 	var pollNum int32
-	var options, title, pollId string
-	var optionList []*pb.Option
+	var options string
+	var title, pollId string
 
 	err = m.Conn.QueryRowContext(ctx, pollQuery, req.PollId).Scan(&pollId, &pollNum, &title, &options)
 	if err != nil {
@@ -97,9 +99,33 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 		return nil, fmt.Errorf("failed to get poll details: %w", err)
 	}
 
+	// JSON ma'lumotlarini qo'lda unmarshallash va to'g'ri tipga moslashtirish
+	var rawOptions map[string]interface{}
+	var optionList []*pb.Option
+
 	if options != "" {
-		if err := json.Unmarshal([]byte(options), &optionList); err != nil {
-			return nil, fmt.Errorf("failed to unmarshal options: %s", err.Error())
+		if err := json.Unmarshal([]byte(options), &rawOptions); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal options: %w", err)
+		}
+
+		// Bitta obyektni []map[string]interface{} ga aylantirish
+		for key, value := range rawOptions {
+			option := &pb.Option{}
+
+			if key == "variant" {
+				if variant, ok := value.(string); ok {
+					option.Variant = &variant
+				}
+			}
+
+			if key == "ball" {
+				if ball, ok := value.(float64); ok {
+					ballInt := int32(ball)
+					option.Ball = &ballInt
+				}
+			}
+
+			optionList = append(optionList, option)
 		}
 	}
 
@@ -113,3 +139,6 @@ func (m *QuestionManager) GetAll(ctx context.Context, req *pb.QuestionGetAllReq)
 		Poll:     &poll,
 	}, nil
 }
+
+
+
