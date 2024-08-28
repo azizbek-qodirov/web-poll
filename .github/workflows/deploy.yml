@@ -40,6 +40,7 @@ jobs:
             # Pull latest code from GitHub
             log_info "---------------- PULLING CODE FROM GITHUB ----------------"
             cd web-poll
+            git stash
             git pull origin main
             log_success "---------------- CODE PULLED FROM GITHUB -----------------"
             # Restart polling service
