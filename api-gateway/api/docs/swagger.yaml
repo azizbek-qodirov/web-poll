@@ -77,10 +77,16 @@ definitions:
       title:
         type: string
     type: object
-  genprotos.PollUpdateReq:
+  genprotos.PollUpdateReqSwag:
     properties:
-      id:
-        type: string
+      feedbacks:
+        items:
+          $ref: '#/definitions/genprotos.Feedback'
+        type: array
+      options:
+        items:
+          $ref: '#/definitions/genprotos.Option'
+        type: array
       title:
         type: string
     type: object
@@ -338,41 +344,6 @@ paths:
       summary: Create a new poll
       tags:
       - polls
-    put:
-      consumes:
-      - application/json
-      description: Update an existing poll with poll number, title, and options
-      parameters:
-      - description: Poll update request
-        in: body
-        name: poll
-        required: true
-        schema:
-          $ref: '#/definitions/genprotos.PollUpdateReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Successfully updated
-          schema:
-            type: string
-        "400":
-          description: Invalid request payload
-          schema:
-            type: string
-        "404":
-          description: Poll not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Update an existing poll
-      tags:
-      - polls
   /poll/{id}:
     delete:
       consumes:
@@ -436,6 +407,46 @@ paths:
       security:
       - BearerAuth: []
       summary: Get a poll by ID
+      tags:
+      - polls
+    put:
+      consumes:
+      - application/json
+      description: Update an existing poll with poll number, title, and options
+      parameters:
+      - description: Poll ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Poll update request
+        in: body
+        name: poll
+        required: true
+        schema:
+          $ref: '#/definitions/genprotos.PollUpdateReqSwag'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload
+          schema:
+            type: string
+        "404":
+          description: Poll not found
+          schema:
+            type: string
+        "500":
+          description: Server error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update an existing poll
       tags:
       - polls
   /polls:

@@ -3,6 +3,8 @@ package managers
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
+	"fmt"
 
 	pb "poll-service/genprotos"
 
@@ -112,11 +114,14 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 
 func (m *ResultManager) GetByIDRes(ctx context.Context, req *pb.ByIDs) (*pb.ByIDResponse, error) {
 	query := `
-	SELECT pa.question_id, q.num, pa.answer 
+	SELECT pa.question_id, q.num, pa.answer, p.feedbacks
 	FROM poll_answers pa
 	JOIN questions q ON pa.question_id = q.id
+	JOIN results r ON pa.result_id = r.id
+	JOIN polls p on r.poll_id = p.id
 	WHERE result_id = $1
 	`
+	var feedbacks []byte
 	rows, err := m.Conn.Query(query, req.ResultId)
 	var res pb.ByIDResponse
 	if err != nil {
@@ -126,11 +131,36 @@ func (m *ResultManager) GetByIDRes(ctx context.Context, req *pb.ByIDs) (*pb.ByID
 	for rows.Next() {
 		var questionId string
 		var answer, num int32
-		err := rows.Scan(&questionId, &num, &answer)
+		err := rows.Scan(&questionId, &num, &answer, &feedbacks)
 		if err != nil {
 			return nil, err
 		}
 		res.Answers = append(res.Answers, &pb.IncomingAnswer{QuestionId: &questionId, AnswerPoint: &answer, Num: &num})
 	}
+	var feedbackList []*pb.Feedback
+	if len(feedbacks) > 0 {
+		fmt.Println(string(feedbacks))
+		var rawFeedbacks []map[string]interface{}
+		if err := json.Unmarshal(feedbacks, &rawFeedbacks); err != nil {
+			return nil, fmt.Errorf("failed to unmarshal feedbacks: %s", err.Error())
+		}
+
+		for _, rawFeedback := range rawFeedbacks {
+			feedback := &pb.Feedback{}
+			if from, ok := rawFeedback["from"].(float64); ok {
+				fromInt := int32(from)
+				feedback.From = &fromInt
+			}
+			if to, ok := rawFeedback["to"].(float64); ok {
+				toInt := int32(to)
+				feedback.To = &toInt
+			}
+			if text, ok := rawFeedback["text"].(string); ok {
+				feedback.Text = &text
+			}
+			feedbackList = append(feedbackList, feedback)
+		}
+	}
+	res.Feed = feedbackList
 	return &res, nil
 }

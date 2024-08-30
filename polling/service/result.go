@@ -30,12 +30,15 @@ func (s *ResultService) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 }
 
 func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.ByIDResponse, error) {
+	var a, b int32
+
 	resAnswer, err := s.storage.Result().GetByIDRes(ctx, req)
 	if err != nil {
 		return nil, err
 	}
+	// fmt.Println(">>",resAnswer.Feed)
 	var extrovert, nevrotizm, total int32
-	var feed string
+	feed := ""
 	poll, err := s.storage.Poll().GetByID(ctx, &pb.ByID{Id: *req.PollId})
 	if err != nil {
 		return nil, err
@@ -64,6 +67,7 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 		} else {
 			feed = "Nevrotizm"
 		}
+		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &a, Text: &feed}}
 
 	} else {
 		for _, v := range resAnswer.Answers {
@@ -75,10 +79,20 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 				break
 			}
 		}
+		for _, v := range resAnswer.Feed {
+			if *v.From >= total && *v.To <= total {
+				feed = *v.Text
+				a = *v.From
+				b = *v.To
+				break
+			}
+		}
+		fmt.Println(total)
+		fmt.Println(feed)
+
+		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &b, Text: &feed}}
 	}
 
-	fmt.Println(resAnswer.Feed)
-	resAnswer.Feed = &feed
 	return resAnswer, nil
 }
 

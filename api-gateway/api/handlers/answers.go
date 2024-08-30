@@ -50,5 +50,29 @@ func (h *HTTPHandler) SendAnswers(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, gin.H{"message": "Successfully posted", "id": id.ResultId, "feedback": feedResult.Feed})
+	// feedbacklarni iteratsiya qilish va string sifatida yig'ish
+	var feedbacks []string
+	for _, feedback := range feedResult.Feed {
+		if feedback.Text != nil { // nil tekshiruvi
+			feedbacks = append(feedbacks, *feedback.Text) // Pointerni dereference qilish
+		}
+	}
+
+	// Agar feedbacklar massivi faqat bitta elementga ega bo'lsa, uni string sifatida saqlash
+	var feedbackStr interface{}
+	if len(feedbacks) == 1 {
+		feedbackStr = feedbacks[0]
+	} else {
+		feedbackStr = feedbacks
+	}
+
+	// JSON javobni qaytarish
+	c.JSON(201, gin.H{
+		"message":  "Successfully posted",
+		"id":       id.ResultId,
+		"feedback": feedbackStr,
+	})
 }
+
+
+

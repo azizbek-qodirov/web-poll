@@ -35,14 +35,54 @@ func (m *PollManager) Create(ctx context.Context, poll *pb.PollCreateReq) (*pb.V
 }
 
 func (m *PollManager) Update(ctx context.Context, poll *pb.PollUpdateReq) (*pb.Void, error) {
-	// Pollni yangilash uchun so'rov
-	query := "UPDATE polls SET title = $1 WHERE id = $2"
+	// Eski pollni bazadan olish
+	var existingPoll struct {
+		Title     string          `db:"title"`
+		Options   json.RawMessage `db:"options"`
+		Feedbacks json.RawMessage `db:"feedbacks"`
+	}
+	err := m.Conn.QueryRowContext(ctx, "SELECT title, options, feedbacks FROM polls WHERE id = $1", poll.Id).Scan(&existingPoll.Title, &existingPoll.Options, &existingPoll.Feedbacks)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get existing poll: %w", err)
+	}
+	// Title yangilash yoki eski title saqlash
+	title := poll.Title
+	if title == nil {
+		title = &existingPoll.Title
+	}
 
-	// So'rov uchun argumentlarni tayyorlash
-	args := []interface{}{poll.Title, poll.Id}
+	// Options yangilash yoki eski options saqlash
+	options := poll.Options
+	if len(options) == 0 {
+		options = []*pb.Option{}
+		json.Unmarshal(existingPoll.Options, &options)
+	}
 
-	// So'rovni bajarish
-	_, err := m.Conn.ExecContext(ctx, query, args...)
+	// Feedbacks yangilash yoki eski feedbacks saqlash
+	feedbacks := poll.Feedbacks
+	if len(feedbacks) == 0 {
+		feedbacks = []*pb.Feedback{}
+		json.Unmarshal(existingPoll.Feedbacks, &feedbacks)
+	}
+
+	// Yangilangan options va feedbacklarni JSON formatida saqlash
+	optionsJSON, err := json.Marshal(options)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal options: %w", err)
+	}
+
+	feedbacksJSON, err := json.Marshal(feedbacks)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal feedbacks: %w", err)
+	}
+
+	// Yangilanishni amalga oshirish
+	query := `
+		UPDATE polls
+		SET title = $1, options = $2, feedbacks = $3
+		WHERE id = $4
+	`
+	_, err = m.Conn.ExecContext(ctx, query, title, optionsJSON, feedbacksJSON, poll.Id)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update poll: %w", err)
 	}
@@ -94,6 +134,7 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 	// Unmarshal Feedbacks JSON
 	var feedbackList []*pb.Feedback
 	if len(feedbacks) > 0 {
+		fmt.Println(string(feedbacks))
 		var rawFeedbacks []map[string]interface{}
 		if err := json.Unmarshal(feedbacks, &rawFeedbacks); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal feedbacks: %s", err.Error())
@@ -115,6 +156,7 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 			feedbackList = append(feedbackList, feedback)
 		}
 	}
+	fmt.Println(feedbackList)
 
 	return &pb.PollGetByIDRes{
 		Id:       &id,

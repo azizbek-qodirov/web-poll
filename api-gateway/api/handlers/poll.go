@@ -67,15 +67,17 @@ func (h *HTTPHandler) CreatePoll(c *gin.Context) {
 // @Tags polls
 // @Accept json
 // @Produce json
-// @Param poll body pb.PollUpdateReq true "Poll update request"
+// @Param id path string true "Poll ID"
+// @Param poll body pb.PollUpdateReqSwag true "Poll update request"
 // @Success 200 {object} string "Successfully updated"
 // @Failure 400 {object} string "Invalid request payload"
 // @Failure 404 {object} string "Poll not found"
 // @Failure 500 {object} string "Server error"
-// @Router /poll [put]
+// @Router /poll/{id} [put]
 // @Security BearerAuth
 func (h *HTTPHandler) UpdatePoll(c *gin.Context) {
-	var req pb.PollUpdateReq
+	id := c.Param("id")
+	req := pb.PollUpdateReq{Id: &id}
 	if err := c.BindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Invalid request payload": err.Error()})
 		return

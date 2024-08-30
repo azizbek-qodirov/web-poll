@@ -4,6 +4,9 @@ run:
 proto-gen:
 	protoc --go_out=./ --go-grpc_out=./ protos/*.proto
 	
+proto-gen0:
+	protoc --go_out=./ --go-grpc_out=./ --experimental_allow_proto3_optional protos/*.proto
+
 migrate_up:
 	migrate -path migrations -database postgres://postgres:root@localhost:5432/polling_db?sslmode=disable -verbose up
 

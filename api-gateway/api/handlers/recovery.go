@@ -19,7 +19,7 @@ import (
 )
 
 var rdb = redis.NewClient(&redis.Options{
-	Addr: "redis:6379",
+	Addr: "localhost:6379",
 	DB:   0,
 })
 
@@ -43,7 +43,7 @@ func (h *HTTPHandler) SendConfirmationCode(email string) error {
 
 	err = rdb.Set(context.Background(), email, code, 3*time.Minute).Err()
 	if err != nil {
-		return fmt.Errorf("server error storing confirmation code in Redis")
+		return fmt.Errorf("server error storing confirmation code in Redis", "dtc", err.Error())
 	}
 	return nil
 }

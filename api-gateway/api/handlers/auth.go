@@ -66,6 +66,12 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 		return
 	}
 
+	err = h.SendConfirmationCode(req.Email)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code", "err": err.Error()})
+		return
+	}
+
 	_, err = h.User.Register(c,
 		&pb.RegisterReq{
 			Password:          req.Password,
@@ -81,13 +87,6 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "err": err.Error()})
 		return
 	}
-
-	err = h.SendConfirmationCode(req.Email)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code", "err": err.Error()})
-		return
-	}
-
 	c.JSON(http.StatusOK, gin.H{"message": "Your account has been registered. Please check your email for a confirmation link. You have 3 minutes to confirm your account."})
 }
 

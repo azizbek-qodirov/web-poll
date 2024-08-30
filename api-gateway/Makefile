@@ -20,6 +20,10 @@ swag-gen:
 proto-gen:
 	protoc --go_out=./ --go-grpc_out=./ protos/*.proto
 
+proto-gen0:
+	protoc --go_out=./ --go-grpc_out=./ --experimental_allow_proto3_optional protos/*.proto
+
+
 ps:
 	docker ps -a
 
