@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	pb "poll-service/genprotos"
 
 	st "poll-service/storage"
@@ -36,13 +35,16 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 	if err != nil {
 		return nil, err
 	}
-	// fmt.Println(">>",resAnswer.Feed)
+
 	var extrovert, nevrotizm, total int32
 	feed := ""
+
 	poll, err := s.storage.Poll().GetByID(ctx, &pb.ByID{Id: *req.PollId})
 	if err != nil {
 		return nil, err
 	}
+
+	// PollNum shartini tekshirish
 	if *poll.PollNum == 1 {
 		for _, v := range resAnswer.Answers {
 			switch {
@@ -56,8 +58,8 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 				continue
 			}
 		}
-		feed += "Siz "
 
+		// Extrovert va Nevrotizm natijalarini to'g'ri to'ldirish
 		if extrovert > 12 && extrovert > nevrotizm {
 			feed = "Extrovert"
 		} else if extrovert < 12 && nevrotizm < 12 {
@@ -67,34 +69,45 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 		} else {
 			feed = "Nevrotizm"
 		}
+
+		// Javobni qaytarish
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &a, Text: &feed}}
 
 	} else {
 		for _, v := range resAnswer.Answers {
 			total += *v.AnswerPoint
 		}
+
+		// Poll Feedbackni ko'rib chiqish
 		for _, v := range poll.Feedback {
 			if total >= *v.From && total < *v.To {
 				feed = *v.Text
 				break
 			}
 		}
-		for _, v := range resAnswer.Feed {
-			if *v.From >= total && *v.To <= total {
-				feed = *v.Text
-				a = *v.From
-				b = *v.To
-				break
+
+		// Agar pollning `Feed` bo‘limi bo'sh bo'lsa, uni to'ldirish
+		if feed == "" {
+			for _, v := range resAnswer.Feed {
+				if *v.From >= total && *v.To <= total {
+					feed = *v.Text
+					a = *v.From
+					b = *v.To
+					break
+				}
 			}
 		}
 
-		
-		fmt.Println(total)
-		fmt.Println(feed)
-
+		// Feedback to'ldirish
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &b, Text: &feed}}
 	}
+	
+	text := "Afsus balingiz yetarli emas"
+	if feed == "" {
+		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &b, Text: &text}}
+	}
 
+	// Oxirgi natijani chop etish
 	return resAnswer, nil
 }
 

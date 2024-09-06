@@ -10,7 +10,7 @@ import (
 )
 
 func MinIOConnect() (*minio.Client, error) {
-	endpoint := "minio:9000"
+	endpoint := "minio:9000" //minio 
 	accessKeyID := "user"
 	secretAccessKey := "password"
 	useSSL := false
