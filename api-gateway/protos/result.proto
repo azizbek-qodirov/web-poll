@@ -6,8 +6,6 @@ option go_package = "genprotos/";
 
 import "protos/users.proto";
 import "protos/void.proto";
-import "protos/poll.proto";
-
 
 service ResultService {
     rpc CreateResult(CreateResultReq) returns (CreateResultRes);
@@ -65,5 +63,5 @@ message ResultRes {
 
 message ByIDResponse {
     repeated IncomingAnswer answers = 1;
-    repeated Feedback feed = 2;
+    optional string feed = 2;
 }

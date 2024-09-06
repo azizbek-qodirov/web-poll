@@ -1,30 +1,52 @@
 package handlers
 
 import (
-	"bytes"
+	"auth-service/config"
+	"auth-service/models"
 	"context"
 	"crypto/rand"
 	"fmt"
-	"html/template"
 	"math/big"
 	"net/http"
-	"net/smtp"
 	"regexp"
-	"strconv"
 	"time"
 
-	"auth-service/config"
 	pb "auth-service/genprotos"
-	"auth-service/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
+	"gopkg.in/gomail.v2"
 )
 
 var rdb = redis.NewClient(&redis.Options{
-	Addr: "redis:6379",
+	Addr: "localhost:6379",
 	DB:   0,
 })
+
+func (h *HTTPHandler) SendConfirmationCode(email string) error {
+	code, err := generateConfirmationCode()
+	if err != nil {
+		return err
+	}
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", config.Load().SENDER_EMAIL)
+	m.SetHeader("To", email)
+	m.SetHeader("Subject", "Tasdiqlash kodi")
+	m.SetBody("text/plain", fmt.Sprintf("Sizning tasdiqlash kodingiz: %d", code))
+
+	d := gomail.NewDialer("smtp.gmail.com", 587, config.Load().SENDER_EMAIL, config.Load().APP_PASSWORD)
+
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+
+	err = rdb.Set(context.Background(), email, code, 3*time.Minute).Err()
+	if err != nil {
+		return fmt.Errorf("server error storing confirmation code in Redis", "dtc", err.Error())
+	}
+	return nil
+}
 
 func generateConfirmationCode() (int, error) {
 	n, err := rand.Int(rand.Reader, big.NewInt(1000000))
@@ -179,7 +201,6 @@ func (h *HTTPHandler) SendCodeAgain(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
-
 	err = h.SendConfirmationCode(user.Email)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code to email", "err": err.Error()})
@@ -187,49 +208,4 @@ func (h *HTTPHandler) SendCodeAgain(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Confirmation code sent to your email. Please use your code within 3 minutes."})
-}
-
-func (h *HTTPHandler) SendConfirmationCode(email string) error {
-	from := config.Load().SENDER_EMAIL
-	password := config.Load().APP_PASSWORD
-
-	to := []string{
-		email,
-	}
-
-	smtpHost := "smtp.gmail.com"
-	smtpPort := "587"
-
-	auth := smtp.PlainAuth("", from, password, smtpHost)
-
-	t, err := template.ParseFiles("template.html")
-	if err != nil {
-		return err
-	}
-
-	var body bytes.Buffer
-
-	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
-	body.Write([]byte(fmt.Sprintf("Subject: Your verification code \n%s\n\n", mimeHeaders)))
-
-	c, err := generateConfirmationCode()
-	code := strconv.Itoa(c)
-	if err != nil {
-		return err
-	}
-
-	t.Execute(&body, struct{ Passwd string }{Passwd: code})
-
-	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, body.Bytes())
-	if err != nil {
-		return fmt.Errorf("server error sending confirmation code to email" + err.Error())
-	}
-	fmt.Println("Email sended to:", email)
-
-	err = rdb.Set(context.Background(), email, code, 3*time.Minute).Err()
-	if err != nil {
-		return fmt.Errorf("server error storing confirmation code in Redis" + err.Error())
-	}
-
-	return nil
 }

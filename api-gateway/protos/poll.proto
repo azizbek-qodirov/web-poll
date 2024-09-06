@@ -37,7 +37,6 @@ message PollUpdateReq {
     optional string title = 2;
     repeated Option options = 3;
     repeated Feedback feedbacks = 4;
-
 }
 
 message PollUpdateReqSwag {

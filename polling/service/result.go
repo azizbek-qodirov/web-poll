@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	pb "poll-service/genprotos"
 
 	st "poll-service/storage"
@@ -35,6 +36,7 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 	if err != nil {
 		return nil, err
 	}
+	// fmt.Println(">>",resAnswer.Feed)
 	var extrovert, nevrotizm, total int32
 	feed := ""
 	poll, err := s.storage.Poll().GetByID(ctx, &pb.ByID{Id: *req.PollId})
@@ -85,6 +87,8 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 				break
 			}
 		}
+		fmt.Println(total)
+		fmt.Println(feed)
 
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &b, Text: &feed}}
 	}

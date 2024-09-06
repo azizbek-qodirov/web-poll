@@ -134,6 +134,7 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 	// Unmarshal Feedbacks JSON
 	var feedbackList []*pb.Feedback
 	if len(feedbacks) > 0 {
+		fmt.Println(string(feedbacks))
 		var rawFeedbacks []map[string]interface{}
 		if err := json.Unmarshal(feedbacks, &rawFeedbacks); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal feedbacks: %s", err.Error())
@@ -155,6 +156,7 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 			feedbackList = append(feedbackList, feedback)
 		}
 	}
+	fmt.Println(feedbackList)
 
 	return &pb.PollGetByIDRes{
 		Id:       &id,

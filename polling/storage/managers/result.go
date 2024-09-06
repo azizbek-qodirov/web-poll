@@ -139,6 +139,7 @@ func (m *ResultManager) GetByIDRes(ctx context.Context, req *pb.ByIDs) (*pb.ByID
 	}
 	var feedbackList []*pb.Feedback
 	if len(feedbacks) > 0 {
+		fmt.Println(string(feedbacks))
 		var rawFeedbacks []map[string]interface{}
 		if err := json.Unmarshal(feedbacks, &rawFeedbacks); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal feedbacks: %s", err.Error())

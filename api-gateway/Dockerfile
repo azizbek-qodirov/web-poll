@@ -9,7 +9,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o myapp .
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/myapp .
-COPY --from=builder /app/template.html .
 
 COPY .env .
 EXPOSE 8080
