@@ -11,6 +11,7 @@ type QuestionService struct {
 	pb.UnimplementedQuestionServiceServer
 }
 
+
 func NewQuestionService(storage st.StorageI) *QuestionService {
 	return &QuestionService{storage: storage}
 }
