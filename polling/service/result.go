@@ -87,6 +87,8 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 				break
 			}
 		}
+
+		
 		fmt.Println(total)
 		fmt.Println(feed)
 

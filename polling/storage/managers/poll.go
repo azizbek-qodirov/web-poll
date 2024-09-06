@@ -12,6 +12,7 @@ type PollManager struct {
 	Conn *sql.DB
 }
 
+
 func NewPollManager(conn *sql.DB) *PollManager {
 	return &PollManager{Conn: conn}
 }
