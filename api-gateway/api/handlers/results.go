@@ -150,7 +150,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to put object into bucket", "details": err.Error()})
 		return
 	}
-	fileURL := fmt.Sprintf("http://%s/browser/%s/%s", "15.237.118.112:9001", info.Bucket, info.Key)
+	fileURL := fmt.Sprintf("http://%s/browser/%s/%s", "82.97.253.217:9001", info.Bucket, info.Key)
 
 	c.JSON(http.StatusOK, gin.H{"file_url": fileURL})
 }
