@@ -259,4 +259,3 @@ func (m *PollManager) GetAll(ctx context.Context, req *pb.PollGetAllReq) (*pb.Po
 		Poll: polls,
 	}, nil
 }
-

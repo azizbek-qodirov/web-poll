@@ -1,7 +1,8 @@
 -- Insert poll
-INSERT INTO polls (id, poll_num, title, options, feedbacks) VALUES (
+INSERT INTO polls (id, poll_num, title, subtitle, options, feedbacks) VALUES (
     'e3a2920e-8f23-4603-8086-3dfd8cffaffb', 
     1, 
+    '1-Surovnoma',
     'Yo‘riqnoma: Ta’kidlariga mos kelsa “ha” mos kelmasa “yo‘q” javobini belgilab qo‘ying.', 
     '[{"ball": 1, "variant": "ha"}, {"ball": 0, "variant": "yo‘q"}]'::JSONB,
     '[{"from": 0, "text": "0-10 ball topladingiz", "to": 10}]'::JSONB

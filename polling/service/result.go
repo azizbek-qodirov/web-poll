@@ -102,7 +102,7 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &b, Text: &feed}}
 	}
 	
-	text := "Afsus balingiz yetarli emas"
+	text := "Ajoyib, surovnomani ishlashda davom eting ! "
 	if feed == "" {
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &b, Text: &text}}
 	}
