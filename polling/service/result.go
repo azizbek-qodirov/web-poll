@@ -69,7 +69,7 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 		} else {
 			feed = "Nevrotizm"
 		}
-			feed = "ekansiz!\n\tSurovnomani yechishda davom eting!"
+			feed = "Ajoyib Surovnomani yechishda davom eting!"
 
 		// Javobni qaytarish
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &a, Text: &feed}}
