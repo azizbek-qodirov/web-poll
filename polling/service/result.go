@@ -37,7 +37,7 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 	}
 
 	var extrovert, nevrotizm, total int32
-	feed := ""
+	feed := "Siz"
 
 	poll, err := s.storage.Poll().GetByID(ctx, &pb.ByID{Id: *req.PollId})
 	if err != nil {
@@ -69,6 +69,7 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 		} else {
 			feed = "Nevrotizm"
 		}
+			feed = "ekansiz!\n\tSurovnomani yechishda davom eting!"
 
 		// Javobni qaytarish
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &a, Text: &feed}}
