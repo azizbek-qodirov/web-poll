@@ -1175,6 +1175,9 @@ const docTemplate = `{
         "genprotos.RegisterReqForSwagger": {
             "type": "object",
             "properties": {
+                "age": {
+                    "type": "string"
+                },
                 "email": {
                     "type": "string"
                 },
@@ -1185,6 +1188,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "name": {
+                    "type": "string"
+                },
+                "nationality": {
                     "type": "string"
                 },
                 "password": {

@@ -141,6 +141,8 @@ definitions:
     type: object
   genprotos.RegisterReqForSwagger:
     properties:
+      age:
+        type: string
       email:
         type: string
       gender:
@@ -148,6 +150,8 @@ definitions:
       level_type:
         type: string
       name:
+        type: string
+      nationality:
         type: string
       password:
         type: string

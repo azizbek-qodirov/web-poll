@@ -41,7 +41,7 @@ func (m *ResultManager) SavePollAnswer(ctx context.Context, req *pb.SavePollAnsw
 func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*pb.ExcelResultsRes, error) {
 	query := `
 		SELECT 
-			u.name, u.surname, u.gender, u.email, u.phone_number, u.working_experience, u.level_type,
+			u.name, u.surname, u.gender, u.age, u.nationality, u.email, u.phone_number, u.working_experience, u.level_type,
 			p.poll_num,
 			q.num AS question_num, q.id, pa.answer
 		FROM 
