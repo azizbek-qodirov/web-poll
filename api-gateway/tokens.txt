@@ -25,7 +25,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Indqd3hqYnVmaHd0dHNlbXB0cUBuYm1
   "gender": "male",
   "level_type": "junior",
   "name": "Farruhbek",
-  "nationality": "o`zbek",
+  "nation": "o`zbek",
   "password": "77777",
   "phone_number": "+998973211221",
   "surname": "string",

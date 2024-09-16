@@ -151,7 +151,7 @@ definitions:
         type: string
       name:
         type: string
-      nationality:
+      nation:
         type: string
       password:
         type: string

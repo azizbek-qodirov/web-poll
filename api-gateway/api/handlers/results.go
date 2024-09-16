@@ -93,7 +93,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 				result.User.Surname,
 				result.User.Gender,
 				result.User.Age,
-                result.User.Nationality,
+                result.User.Nation,
 				result.User.Email,
 				result.User.PhoneNumber,
 				result.User.WorkingExperience,

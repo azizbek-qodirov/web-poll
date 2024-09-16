@@ -1190,7 +1190,7 @@ const docTemplate = `{
                 "name": {
                     "type": "string"
                 },
-                "nationality": {
+                "nation": {
                     "type": "string"
                 },
                 "password": {

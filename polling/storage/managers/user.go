@@ -27,8 +27,8 @@ func (m *UserManager) Register(context context.Context, req *pb.RegisterReq) (*p
 		gender = "female"
 	}
 
-	query := "INSERT INTO users (id, name, surname, gender, age, nationality, email, password, phone_number, working_experience, level_type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)"
-	_, err := m.Conn.Exec(query, uuid.NewString(), req.Name, req.Surname, gender, req.Age, req.Nationality, req.Email, req.Password, req.PhoneNumber, req.WorkingExperience, req.LevelType)
+	query := "INSERT INTO users (id, name, surname, gender, age, nation, email, password, phone_number, working_experience, level_type) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)"
+	_, err := m.Conn.Exec(query, uuid.NewString(), req.Name, req.Surname, gender, req.Age, req.Nation, req.Email, req.Password, req.PhoneNumber, req.WorkingExperience, req.LevelType)
 	return nil, err
 }
 

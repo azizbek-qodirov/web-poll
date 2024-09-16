@@ -25,7 +25,7 @@ message RegisterReq {
     string surname = 2;
     GenderType gender = 3;
     string age = 4;
-    string nationality = 5;
+    string nation = 5;
     string email = 6;
     string password = 7;
     string phone_number = 8;
@@ -38,7 +38,7 @@ message RegisterReqForSwagger{
     string surname = 2;
     string gender = 3;
     string age = 4;
-    string nationality = 5;
+    string nation = 5;
     string email = 6;
     string password = 7;
     string phone_number = 8;
@@ -95,7 +95,7 @@ message UserExcelResp {
     string surname = 2;
     string gender = 3;
     string age = 4;
-    string nationality = 5;
+    string nation = 5;
     string email = 6;
     string password = 7;
     string phone_number = 8;
