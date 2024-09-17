@@ -110,7 +110,6 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 	)
 	
 	err := row.Scan(&id, &pollNum, &title, &subtitle, &options, &feedbacks)
-	fmt.Println("databaza>>>>>>>>>>>>>", row)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("poll not found: %w", err)
@@ -142,7 +141,6 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 	// Unmarshal Feedbacks JSON
 	var feedbackList []*pb.Feedback
 	if len(feedbacks) > 0 {
-		fmt.Println("fedbak>>>>>>>>>",string(feedbacks))
 		var rawFeedbacks []map[string]interface{}
 		if err := json.Unmarshal(feedbacks, &rawFeedbacks); err != nil {
 			return nil, fmt.Errorf("failed to unmarshal feedbacks: %s", err.Error())
@@ -164,7 +162,6 @@ func (m *PollManager) GetByID(ctx context.Context, req *pb.ByID) (*pb.PollGetByI
 			feedbackList = append(feedbackList, feedback)
 		}
 	}
-	fmt.Println("fedbaklistlari>>>>>>>>>", feedbackList)
 
 	return &pb.PollGetByIDRes{
 		Id:       &id,
