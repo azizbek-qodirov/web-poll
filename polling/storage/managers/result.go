@@ -66,10 +66,10 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 
 	resultsMap := make(map[string]*pb.ResultRes)
 	for rows.Next() {
-		var name, surname, gender, email, phoneNumber, level_type, questionId string
+		var name, surname, gender, age, nation, email, phoneNumber, level_type, questionId string
 		var workingExperience, pollNum, questionNum, answer int32
 
-		err := rows.Scan(&name, &surname, &gender, &email, &phoneNumber, &workingExperience, &level_type, &pollNum, &questionNum, &questionId, &answer)
+		err := rows.Scan(&name, &surname, &gender, &age, &nation, &email, &phoneNumber, &workingExperience, &level_type, &pollNum, &questionNum, &questionId, &answer)
 		if err != nil {
 			return nil, err
 		}
@@ -79,6 +79,8 @@ func (m *ResultManager) GetResultsInExcel(ctx context.Context, req *pb.Void) (*p
 			Surname:           surname,
 			Gender:            gender,
 			Email:             email,
+			Age:               age,
+			Nation:            nation,
 			PhoneNumber:       phoneNumber,
 			WorkingExperience: workingExperience,
 			LevelType:         level_type,
