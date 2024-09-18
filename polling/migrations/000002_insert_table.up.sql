@@ -7,6 +7,7 @@ INSERT INTO polls (id, poll_num, title, subtitle, options) VALUES (
     '[{"ball": 1, "variant": "ha"}, {"ball": 0, "variant": "yo‘q"}]'::JSONB
 );
 
+
 INSERT INTO questions (id, num, content, poll_id) VALUES 
 (
     'b8aeedae-be34-464d-a016-0ca6755cf904', 
@@ -59,7 +60,7 @@ INSERT INTO questions (id, num, content, poll_id) VALUES
 (
     'b8aeedae-be34-464d-a016-0ca6755cf90c', 
     9,
-    'Jiddiy sabab bo‘lmasa ham o‘zingizni baxtsiz deb uylaysizmi?',
+    'Jiddiy sabab bo‘lmasa ham o‘zingizni baxtsiz deb o`ylaysizmi?',
     'e3a2920e-8f23-4603-8086-3dfd8cffaffb'
 ),
 (
@@ -77,7 +78,7 @@ INSERT INTO questions (id, num, content, poll_id) VALUES
 (
     'b8aeedae-be34-464d-a016-0ca6755cf90f', 
     12,
-    'Jaxlingiz chiqqanda o‘zingizni uyg‘otasizmi?',
+    'Jaxlingiz chiqqanda o‘zingizni o`yg‘otasizmi?',
     'e3a2920e-8f23-4603-8086-3dfd8cffaffb'
 ),
 (
@@ -119,7 +120,7 @@ INSERT INTO questions (id, num, content, poll_id) VALUES
 (
     'b8aeedae-be34-464d-a016-0ca6755cf916', 
     19,
-    'Baʼzan g‘ayratingiz jo‘shib qadamingizdan o‘t chaqnaydi, baʼzan esa hamma ishdan xavfsalangiz pir bo‘lib loqayd bulishingiz haqiqatmi?',
+    'Baʼzan g‘ayratingiz jo‘shib qadamingizdan o‘t chaqnaydi, baʼzan esa hamma ishdan xavfsalangiz pir bo‘lib loqayd bo`lishingiz haqiqatmi?',
     'e3a2920e-8f23-4603-8086-3dfd8cffaffb'
 ),
 (
