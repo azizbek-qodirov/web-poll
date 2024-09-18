@@ -78,7 +78,7 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 			Surname:           req.Surname,
 			Gender:            pb.GenderType(gender),
 			Age:               req.Age,
-			
+			Nation:            req.Nation,
 			Email:             req.Email,
 			Password:          req.Password,
 			PhoneNumber:       req.PhoneNumber,
