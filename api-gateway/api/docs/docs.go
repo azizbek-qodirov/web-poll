@@ -15,115 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/confirm-registration": {
-            "post": {
-                "description": "Confirms a user's registration using the code sent to their email.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "registration"
-                ],
-                "summary": "Confirm registration with code",
-                "parameters": [
-                    {
-                        "description": "Confirmation request",
-                        "name": "confirmation",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.ConfirmRegistrationReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "JWT tokens",
-                        "schema": {
-                            "$ref": "#/definitions/token.Tokens"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request payload",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "401": {
-                        "description": "Incorrect verification code",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Verification code expired or email not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/forgot-password": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Sends a confirmation code to email recovery password",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "password-recovery"
-                ],
-                "summary": "Forgot passwrod",
-                "parameters": [
-                    {
-                        "description": "User login credentials",
-                        "name": "credentials",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.ForgotPasswordReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Page not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/login": {
             "post": {
                 "description": "Authenticate user with email and password",
@@ -698,64 +589,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/recover-password": {
-            "post": {
-                "description": "Verifies the code and updates the password",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "password-recovery"
-                ],
-                "summary": "Recover password (Use this one after sending verification code)",
-                "parameters": [
-                    {
-                        "description": "Recover Password Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.RecoverPasswordReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Password successfully updated",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid request payload",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "401": {
-                        "description": "Incorrect verification code",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Verification code expired or email not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Error updating password",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/register": {
             "post": {
                 "description": "Register a new user with email, username, and password",
@@ -845,63 +678,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/resverify": {
-            "post": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "Sends a confirmation code to email recovery password again",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "password-recovery"
-                ],
-                "summary": "Sends code again if user didn't recieve the code",
-                "parameters": [
-                    {
-                        "description": "User login credentials",
-                        "name": "credentials",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/genprotos.ByEmail"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Page not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Server error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "/send-answers": {
             "post": {
                 "security": [
@@ -955,14 +731,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "genprotos.ByEmail": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "type": "string"
-                }
-            }
-        },
         "genprotos.Feedback": {
             "type": "object",
             "properties": {
@@ -1207,26 +975,6 @@ const docTemplate = `{
                 }
             }
         },
-        "models.ConfirmRegistrationReq": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.ForgotPasswordReq": {
-            "type": "object",
-            "properties": {
-                "email": {
-                    "description": "User's email address",
-                    "type": "string"
-                }
-            }
-        },
         "models.GetProfileResp": {
             "type": "object",
             "properties": {
@@ -1260,20 +1008,6 @@ const docTemplate = `{
                 },
                 "password": {
                     "description": "User's password",
-                    "type": "string"
-                }
-            }
-        },
-        "models.RecoverPasswordReq": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "new_password": {
                     "type": "string"
                 }
             }

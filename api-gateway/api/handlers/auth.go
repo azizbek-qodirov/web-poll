@@ -4,13 +4,13 @@ import (
 	"auth-service/api/token"
 	"auth-service/config"
 	"auth-service/models"
-	"context"
+	// "context"
 	"net/http"
 
 	pb "auth-service/genprotos"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis"
+	// "github.com/go-redis/redis"
 	"github.com/golang-jwt/jwt"
 	_ "github.com/swaggo/swag"
 )
@@ -66,11 +66,11 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 		return
 	}
 
-	err = h.SendConfirmationCode(req.Email)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code", "err": err.Error()})
-		return
-	}
+	// err = h.SendConfirmationCode(req.Email)
+	// if err != nil {
+	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code", "err": err.Error()})
+	// 	return
+	// }
 
 	_, err = h.User.Register(c,
 		&pb.RegisterReq{
@@ -89,60 +89,60 @@ func (h *HTTPHandler) Register(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error", "err": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Your account has been registered. Please check your email for a confirmation link. You have 3 minutes to confirm your account."})
+	c.JSON(http.StatusOK, gin.H{"message": "Successfully registered."})
 }
 
-// ConfirmRegistration godoc
-// @Summary Confirm registration with code
-// @Description Confirms a user's registration using the code sent to their email.
-// @Tags registration
-// @Accept json
-// @Produce json
-// @Param confirmation body models.ConfirmRegistrationReq true "Confirmation request"
-// @Success 200 {object} token.Tokens "JWT tokens"
-// @Failure 400 {object} string "Invalid request payload"
-// @Failure 401 {object} string "Incorrect verification code"
-// @Failure 404 {object} string "Verification code expired or email not found"
-// @Router /confirm-registration [post]
-func (h *HTTPHandler) ConfirmRegistration(c *gin.Context) {
-	var req models.ConfirmRegistrationReq
-	if err := c.BindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"Invalid request payload": err.Error()})
-		return
-	}
+// // ConfirmRegistration godoc
+// // @Summary Confirm registration with code
+// // @Description Confirms a user's registration using the code sent to their email.
+// // @Tags registration
+// // @Accept json
+// // @Produce json
+// // @Param confirmation body models.ConfirmRegistrationReq true "Confirmation request"
+// // @Success 200 {object} token.Tokens "JWT tokens"
+// // @Failure 400 {object} string "Invalid request payload"
+// // @Failure 401 {object} string "Incorrect verification code"
+// // @Failure 404 {object} string "Verification code expired or email not found"
+// // @Router /confirm-registration [post]
+// func (h *HTTPHandler) ConfirmRegistration(c *gin.Context) {
+// 	var req models.ConfirmRegistrationReq
+// 	if err := c.BindJSON(&req); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"Invalid request payload": err.Error()})
+// 		return
+// 	}
 
-	storedCode, err := rdb.Get(context.Background(), req.Email).Result()
-	if err == redis.Nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Verification code expired or email not found", "error": "code"})
-		return
-	} else if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": "This email not found in confirmation requests!", "error": "email"})
-		return
-	}
+// 	// storedCode, err := rdb.Get(context.Background(), req.Email).Result()
+// 	// if err == redis.Nil {
+// 	// 	c.JSON(http.StatusNotFound, gin.H{"message": "Verification code expired or email not found", "error": "code"})
+// 	// 	return
+// 	// } else if err != nil {
+// 	// 	c.JSON(http.StatusInternalServerError, gin.H{"message": "This email not found in confirmation requests!", "error": "email"})
+// 	// 	return
+// 	// }
 
-	if storedCode != req.Code {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "Incorrect verification code", "error": "code"})
-		return
-	}
+// 	// if storedCode != req.Code {
+// 	// 	c.JSON(http.StatusUnauthorized, gin.H{"message": "Incorrect verification code", "error": "code"})
+// 	// 	return
+// 	// }
 
-	_, err = h.User.ConfirmUser(c, &pb.ConfirmUserReq{Email: req.Email})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error confirming user", "details": err.Error()})
-		return
-	}
+// 	// _, err = h.User.ConfirmUser(c, &pb.ConfirmUserReq{Email: req.Email})
+// 	// if err != nil {
+// 	// 	c.JSON(http.StatusInternalServerError, gin.H{"error": "Error confirming user", "details": err.Error()})
+// 	// 	return
+// 	// }
 
-	user, err := h.User.Profile(c, &pb.GetProfileReq{Email: req.Email})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching user", "details": err.Error()})
-		return
-	}
+// 	user, err := h.User.Profile(c, &pb.GetProfileReq{Email: req.Email})
+// 	if err != nil {
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error fetching user", "details": err.Error()})
+// 		return
+// 	}
 
-	tokens := token.GenerateJWTToken(user.Id, user.Email, user.Role)
+// 	tokens := token.GenerateJWTToken(user.Id, user.Email, user.Role)
 
-	rdb.Del(context.Background(), req.Email)
+// 	// rdb.Del(context.Background(), req.Email)
 
-	c.JSON(http.StatusOK, tokens)
-}
+// 	c.JSON(http.StatusOK, tokens)
+// }
 
 // Login godoc
 // @Summary Login a user
@@ -173,16 +173,16 @@ func (h *HTTPHandler) Login(c *gin.Context) {
 		return
 	}
 
-	if !user.IsConfirmed {
-		err = h.SendConfirmationCode(req.Email)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code", "err": err.Error()})
-			return
-		}
+	// if !user.IsConfirmed {
+	// 	err = h.SendConfirmationCode(req.Email)
+	// 	if err != nil {
+	// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Server error sending confirmation code", "err": err.Error()})
+	// 		return
+	// 	}
 
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Your account is not verified. Please check your email for a confirmation link."})
-		return
-	}
+	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "Your account is not verified. Please check your email for a confirmation link."})
+	// 	return
+	// }
 
 	tokens := token.GenerateJWTToken(user.Id, user.Email, user.Role)
 

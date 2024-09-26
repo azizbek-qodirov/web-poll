@@ -19,17 +19,17 @@ func (s *UserService) Register(ctx context.Context, req *pb.RegisterReq) (*pb.Vo
 	return s.storage.User().Register(ctx, req)
 }
 
-func (s *UserService) ConfirmUser(ctx context.Context, req *pb.ConfirmUserReq) (*pb.Void, error) {
-	return s.storage.User().ConfirmUser(ctx, req)
-}
+// func (s *UserService) ConfirmUser(ctx context.Context, req *pb.ConfirmUserReq) (*pb.Void, error) {
+// 	return s.storage.User().ConfirmUser(ctx, req)
+// }
 
 func (s *UserService) Profile(ctx context.Context, req *pb.GetProfileReq) (*pb.GetProfileResp, error) {
 	return s.storage.User().Profile(ctx, req)
 }
 
-func (s *UserService) UpdatePassword(ctx context.Context, req *pb.UpdatePasswordReq) (*pb.Void, error) {
-	return s.storage.User().UpdatePassword(ctx, req)
-}
+// func (s *UserService) UpdatePassword(ctx context.Context, req *pb.UpdatePasswordReq) (*pb.Void, error) {
+// 	return s.storage.User().UpdatePassword(ctx, req)
+// }
 
 func (s *UserService) IsEmailExists(ctx context.Context, req *pb.IsEmailExistsReq) (*pb.IsEmailExistsResp, error) {
 	return s.storage.User().IsEmailExists(ctx, req)

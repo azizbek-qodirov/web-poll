@@ -1,9 +1,4 @@
 definitions:
-  genprotos.ByEmail:
-    properties:
-      email:
-        type: string
-    type: object
   genprotos.Feedback:
     properties:
       from:
@@ -162,19 +157,6 @@ definitions:
       working_experience:
         type: integer
     type: object
-  models.ConfirmRegistrationReq:
-    properties:
-      code:
-        type: string
-      email:
-        type: string
-    type: object
-  models.ForgotPasswordReq:
-    properties:
-      email:
-        description: User's email address
-        type: string
-    type: object
   models.GetProfileResp:
     properties:
       email:
@@ -201,15 +183,6 @@ definitions:
         description: User's password
         type: string
     type: object
-  models.RecoverPasswordReq:
-    properties:
-      code:
-        type: string
-      email:
-        type: string
-      new_password:
-        type: string
-    type: object
   token.Tokens:
     properties:
       access_token:
@@ -222,76 +195,6 @@ definitions:
 info:
   contact: {}
 paths:
-  /confirm-registration:
-    post:
-      consumes:
-      - application/json
-      description: Confirms a user's registration using the code sent to their email.
-      parameters:
-      - description: Confirmation request
-        in: body
-        name: confirmation
-        required: true
-        schema:
-          $ref: '#/definitions/models.ConfirmRegistrationReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: JWT tokens
-          schema:
-            $ref: '#/definitions/token.Tokens'
-        "400":
-          description: Invalid request payload
-          schema:
-            type: string
-        "401":
-          description: Incorrect verification code
-          schema:
-            type: string
-        "404":
-          description: Verification code expired or email not found
-          schema:
-            type: string
-      summary: Confirm registration with code
-      tags:
-      - registration
-  /forgot-password:
-    post:
-      consumes:
-      - application/json
-      description: Sends a confirmation code to email recovery password
-      parameters:
-      - description: User login credentials
-        in: body
-        name: credentials
-        required: true
-        schema:
-          $ref: '#/definitions/models.ForgotPasswordReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "404":
-          description: Page not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Forgot passwrod
-      tags:
-      - password-recovery
   /login:
     post:
       consumes:
@@ -656,44 +559,6 @@ paths:
       summary: Get all questions
       tags:
       - question
-  /recover-password:
-    post:
-      consumes:
-      - application/json
-      description: Verifies the code and updates the password
-      parameters:
-      - description: Recover Password Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.RecoverPasswordReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Password successfully updated
-          schema:
-            type: string
-        "400":
-          description: Invalid request payload
-          schema:
-            type: string
-        "401":
-          description: Incorrect verification code
-          schema:
-            type: string
-        "404":
-          description: Verification code expired or email not found
-          schema:
-            type: string
-        "500":
-          description: Error updating password
-          schema:
-            type: string
-      summary: Recover password (Use this one after sending verification code)
-      tags:
-      - password-recovery
   /register:
     post:
       consumes:
@@ -751,42 +616,6 @@ paths:
       summary: Get results in excel file
       tags:
       - results
-  /resverify:
-    post:
-      consumes:
-      - application/json
-      description: Sends a confirmation code to email recovery password again
-      parameters:
-      - description: User login credentials
-        in: body
-        name: credentials
-        required: true
-        schema:
-          $ref: '#/definitions/genprotos.ByEmail'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-        "401":
-          description: Unauthorized
-          schema:
-            type: string
-        "404":
-          description: Page not found
-          schema:
-            type: string
-        "500":
-          description: Server error
-          schema:
-            type: string
-      security:
-      - BearerAuth: []
-      summary: Sends code again if user didn't recieve the code
-      tags:
-      - password-recovery
   /send-answers:
     post:
       consumes:

@@ -8,9 +8,9 @@ import "protos/void.proto";
 
 service UserService {
     rpc Register(RegisterReq) returns (Void);
-    rpc ConfirmUser(ConfirmUserReq) returns (Void);
+    // rpc ConfirmUser(ConfirmUserReq) returns (Void);
     rpc Profile(GetProfileReq) returns (GetProfileResp);
-    rpc UpdatePassword(UpdatePasswordReq) returns (Void);
+    // rpc UpdatePassword(UpdatePasswordReq) returns (Void);
     rpc IsEmailExists(IsEmailExistsReq) returns (IsEmailExistsResp);
     rpc GetByID(GetProfileByIdReq) returns (GetProfileByIdResp);
     rpc GetByEmail(ByEmail) returns (GetProfileByIdResp);
@@ -46,9 +46,9 @@ message RegisterReqForSwagger{
     string level_type = 10;
 }
 
-message ConfirmUserReq {
-    string email = 1; // User's email to confirm
-}
+// message ConfirmUserReq {
+//     string email = 1; // User's email to confirm
+// }
 
 message GetProfileReq {
     string email = 1; // User's email to retrieve the profile
@@ -62,10 +62,10 @@ message GetProfileResp {
     bool is_confirmed = 5;  // Indicates if the user is confirmed
 }
 
-message UpdatePasswordReq {
-    string email = 1;       // User's email
-    string new_password = 2; // New password to set
-}
+// message UpdatePasswordReq {
+//     string email = 1;       // User's email
+//     string new_password = 2; // New password to set
+// }
 
 message IsEmailExistsReq {
     string email = 1; // User's email to check

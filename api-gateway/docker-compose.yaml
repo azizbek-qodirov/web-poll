@@ -11,13 +11,13 @@ services:
     volumes:
       - ./files:/files
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6380:6379"
-    networks:
-      - mynetwork
+  # redis:
+  #   image: redis:latest
+  #   container_name: redis
+  #   ports:
+  #     - "6380:6379"
+  #   networks:
+  #     - mynetwork
 
   minio:
     container_name: minio

@@ -19,13 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	UserService_Register_FullMethodName       = "/polling.UserService/Register"
-	UserService_ConfirmUser_FullMethodName    = "/polling.UserService/ConfirmUser"
-	UserService_Profile_FullMethodName        = "/polling.UserService/Profile"
-	UserService_UpdatePassword_FullMethodName = "/polling.UserService/UpdatePassword"
-	UserService_IsEmailExists_FullMethodName  = "/polling.UserService/IsEmailExists"
-	UserService_GetByID_FullMethodName        = "/polling.UserService/GetByID"
-	UserService_GetByEmail_FullMethodName     = "/polling.UserService/GetByEmail"
+	UserService_Register_FullMethodName      = "/polling.UserService/Register"
+	UserService_Profile_FullMethodName       = "/polling.UserService/Profile"
+	UserService_IsEmailExists_FullMethodName = "/polling.UserService/IsEmailExists"
+	UserService_GetByID_FullMethodName       = "/polling.UserService/GetByID"
+	UserService_GetByEmail_FullMethodName    = "/polling.UserService/GetByEmail"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -33,9 +31,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	Register(ctx context.Context, in *RegisterReq, opts ...grpc.CallOption) (*Void, error)
-	ConfirmUser(ctx context.Context, in *ConfirmUserReq, opts ...grpc.CallOption) (*Void, error)
+	// rpc ConfirmUser(ConfirmUserReq) returns (Void);
 	Profile(ctx context.Context, in *GetProfileReq, opts ...grpc.CallOption) (*GetProfileResp, error)
-	UpdatePassword(ctx context.Context, in *UpdatePasswordReq, opts ...grpc.CallOption) (*Void, error)
+	// rpc UpdatePassword(UpdatePasswordReq) returns (Void);
 	IsEmailExists(ctx context.Context, in *IsEmailExistsReq, opts ...grpc.CallOption) (*IsEmailExistsResp, error)
 	GetByID(ctx context.Context, in *GetProfileByIdReq, opts ...grpc.CallOption) (*GetProfileByIdResp, error)
 	GetByEmail(ctx context.Context, in *ByEmail, opts ...grpc.CallOption) (*GetProfileByIdResp, error)
@@ -59,30 +57,10 @@ func (c *userServiceClient) Register(ctx context.Context, in *RegisterReq, opts 
 	return out, nil
 }
 
-func (c *userServiceClient) ConfirmUser(ctx context.Context, in *ConfirmUserReq, opts ...grpc.CallOption) (*Void, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Void)
-	err := c.cc.Invoke(ctx, UserService_ConfirmUser_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *userServiceClient) Profile(ctx context.Context, in *GetProfileReq, opts ...grpc.CallOption) (*GetProfileResp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetProfileResp)
 	err := c.cc.Invoke(ctx, UserService_Profile_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswordReq, opts ...grpc.CallOption) (*Void, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(Void)
-	err := c.cc.Invoke(ctx, UserService_UpdatePassword_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -124,9 +102,9 @@ func (c *userServiceClient) GetByEmail(ctx context.Context, in *ByEmail, opts ..
 // for forward compatibility
 type UserServiceServer interface {
 	Register(context.Context, *RegisterReq) (*Void, error)
-	ConfirmUser(context.Context, *ConfirmUserReq) (*Void, error)
+	// rpc ConfirmUser(ConfirmUserReq) returns (Void);
 	Profile(context.Context, *GetProfileReq) (*GetProfileResp, error)
-	UpdatePassword(context.Context, *UpdatePasswordReq) (*Void, error)
+	// rpc UpdatePassword(UpdatePasswordReq) returns (Void);
 	IsEmailExists(context.Context, *IsEmailExistsReq) (*IsEmailExistsResp, error)
 	GetByID(context.Context, *GetProfileByIdReq) (*GetProfileByIdResp, error)
 	GetByEmail(context.Context, *ByEmail) (*GetProfileByIdResp, error)
@@ -140,14 +118,8 @@ type UnimplementedUserServiceServer struct {
 func (UnimplementedUserServiceServer) Register(context.Context, *RegisterReq) (*Void, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedUserServiceServer) ConfirmUser(context.Context, *ConfirmUserReq) (*Void, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ConfirmUser not implemented")
-}
 func (UnimplementedUserServiceServer) Profile(context.Context, *GetProfileReq) (*GetProfileResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Profile not implemented")
-}
-func (UnimplementedUserServiceServer) UpdatePassword(context.Context, *UpdatePasswordReq) (*Void, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
 }
 func (UnimplementedUserServiceServer) IsEmailExists(context.Context, *IsEmailExistsReq) (*IsEmailExistsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsEmailExists not implemented")
@@ -189,24 +161,6 @@ func _UserService_Register_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UserService_ConfirmUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConfirmUserReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).ConfirmUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_ConfirmUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).ConfirmUser(ctx, req.(*ConfirmUserReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _UserService_Profile_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetProfileReq)
 	if err := dec(in); err != nil {
@@ -221,24 +175,6 @@ func _UserService_Profile_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Profile(ctx, req.(*GetProfileReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserService_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdatePasswordReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServiceServer).UpdatePassword(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserService_UpdatePassword_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServiceServer).UpdatePassword(ctx, req.(*UpdatePasswordReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -309,16 +245,8 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserService_Register_Handler,
 		},
 		{
-			MethodName: "ConfirmUser",
-			Handler:    _UserService_ConfirmUser_Handler,
-		},
-		{
 			MethodName: "Profile",
 			Handler:    _UserService_Profile_Handler,
-		},
-		{
-			MethodName: "UpdatePassword",
-			Handler:    _UserService_UpdatePassword_Handler,
 		},
 		{
 			MethodName: "IsEmailExists",

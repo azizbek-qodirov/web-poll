@@ -111,7 +111,7 @@ func (h *HTTPHandler) GetUserResultsInExcel(c *gin.Context) {
 				}
 			}
 
-			row = append(row[:8], append([]interface{}{totalPoints}, row[8:]...)...)
+			row = append(row[:10], append([]interface{}{totalPoints}, row[10:]...)...)
 
 			for i, cellValue := range row {
 				cell := fmt.Sprintf("%s%d", toAlphaString(i+1), rowNum)

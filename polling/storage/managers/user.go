@@ -5,10 +5,9 @@ import (
 	"database/sql"
 	"errors"
 	pb "poll-service/genprotos"
-	"time"
 
 	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
+	// "golang.org/x/crypto/bcrypt"
 )
 
 type UserManager struct {
@@ -32,11 +31,11 @@ func (m *UserManager) Register(context context.Context, req *pb.RegisterReq) (*p
 	return nil, err
 }
 
-func (m *UserManager) ConfirmUser(context context.Context, req *pb.ConfirmUserReq) (*pb.Void, error) {
-	query := "UPDATE users SET is_confirmed = true, confirmed_at = $1 WHERE email = $2"
-	_, err := m.Conn.Exec(query, time.Now(), req.Email)
-	return nil, err
-}
+// func (m *UserManager) ConfirmUser(context context.Context, req *pb.ConfirmUserReq) (*pb.Void, error) {
+// 	query := "UPDATE users SET is_confirmed = true, confirmed_at = $1 WHERE email = $2"
+// 	_, err := m.Conn.Exec(query, time.Now(), req.Email)
+// 	return nil, err
+// }
 
 func (m *UserManager) Profile(context context.Context, req *pb.GetProfileReq) (*pb.GetProfileResp, error) {
 	query := "SELECT id, email, password, role, is_confirmed FROM users WHERE email = $1"
@@ -49,15 +48,15 @@ func (m *UserManager) Profile(context context.Context, req *pb.GetProfileReq) (*
 	return &user, nil
 }
 
-func (m *UserManager) UpdatePassword(context context.Context, req *pb.UpdatePasswordReq) (*pb.Void, error) {
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
-	if err != nil {
-		return nil, err
-	}
-	query := "UPDATE users SET password = $1 WHERE email = $2"
-	_, err = m.Conn.Exec(query, string(hashedPassword), req.Email)
-	return nil, err
-}
+// func (m *UserManager) UpdatePassword(context context.Context, req *pb.UpdatePasswordReq) (*pb.Void, error) {
+// 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	query := "UPDATE users SET password = $1 WHERE email = $2"
+// 	_, err = m.Conn.Exec(query, string(hashedPassword), req.Email)
+// 	return nil, err
+// }
 
 func (m *UserManager) IsEmailExists(context context.Context, email *pb.IsEmailExistsReq) (*pb.IsEmailExistsResp, error) {
 	query := "SELECT COUNT(*) FROM users WHERE email = $1"

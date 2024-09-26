@@ -14,9 +14,9 @@ type StorageI interface {
 
 type UserI interface {
 	Register(ctx context.Context, req *pb.RegisterReq) (*pb.Void, error)
-	ConfirmUser(ctx context.Context, req *pb.ConfirmUserReq) (*pb.Void, error)
+	// ConfirmUser(ctx context.Context, req *pb.ConfirmUserReq) (*pb.Void, error)
 	Profile(ctx context.Context, req *pb.GetProfileReq) (*pb.GetProfileResp, error)
-	UpdatePassword(ctx context.Context, req *pb.UpdatePasswordReq) (*pb.Void, error)
+	// UpdatePassword(ctx context.Context, req *pb.UpdatePasswordReq) (*pb.Void, error)
 	IsEmailExists(ctx context.Context, req *pb.IsEmailExistsReq) (*pb.IsEmailExistsResp, error)
 	GetByID(ctx context.Context, req *pb.GetProfileByIdReq) (*pb.GetProfileByIdResp, error)
 	GetByEmail(ctx context.Context, req *pb.ByEmail) (*pb.GetProfileByIdResp, error)

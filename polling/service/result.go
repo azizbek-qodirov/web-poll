@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	pb "poll-service/genprotos"
 
 	st "poll-service/storage"
@@ -22,6 +23,7 @@ func (s *ResultService) CreateResult(ctx context.Context, req *pb.CreateResultRe
 
 func (s *ResultService) SavePollAnswer(ctx context.Context, req *pb.SavePollAnswerReq) (*pb.Void, error) {
 	// text := "Ajoyib, surovnomani ishlashda davom eting !"
+	fmt.Println(">>>>>>>",req.Answer)
 	return s.storage.Result().SavePollAnswer(ctx, req)
 }
 
@@ -69,7 +71,7 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 			feed = "Extrovert va Nevrotizm ekansiz: Ajoyib, surovnomani ishlashda davom eting 😊 !"
 		} else {
 			feed = "Nevrotizm ekansiz: Ajoyib, surovnomani ishlashda davom eting 😊 !"
-		}
+			}
 
 		// Javobni qaytarish
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &a, Text: &feed}}
@@ -102,8 +104,8 @@ func (s *ResultService) GetPollResults(ctx context.Context, req *pb.ByIDs) (*pb.
 		// Feedback to'ldirish
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &b, Text: &feed}}
 	}
-
-	text := "Ajoyib, surovnomani ishlashda davom eting 😊 !"
+	
+	text := "Ajoyib, surovnomani ishlashda davom eting !"
 	if feed == "" {
 		resAnswer.Feed = []*pb.Feedback{{From: &a, To: &b, Text: &text}}
 	}
