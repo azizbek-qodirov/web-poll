@@ -2,6 +2,7 @@ package handlers
 
 import (
 	pb "auth-service/genprotos"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -37,6 +38,8 @@ func (h *HTTPHandler) SendAnswers(c *gin.Context) {
 		return
 	}
 
+	fmt.Println(len(req.Answers), req.Answers)
+	fmt.Println(id.ResultId)
 	for _, i := range req.Answers {
 		_, err := h.Result.SavePollAnswer(c, &pb.SavePollAnswerReq{
 			ResultId:   id.ResultId,
